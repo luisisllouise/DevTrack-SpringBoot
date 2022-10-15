@@ -18,14 +18,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ProjectMembers implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * 映射记录uuid
      */
-    @TableId(type = IdType.INPUT)
-    private byte[] recordUuid;
+    @TableId(value = "record_uuid", type = IdType.INPUT)
+    private byte[] uuid;
 
     /**
      * 项目uuid
@@ -46,6 +45,4 @@ public class ProjectMembers implements Serializable {
      * 用户在项目中扮演的角色
      */
     private byte[] roleUuid;
-
-
 }

@@ -20,14 +20,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Accounts implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * 用户uuid
      */
-    @TableId(type = IdType.INPUT)
-    private byte[] userUuid;
+    @TableId(value = "user_uuid", type = IdType.INPUT)
+    private byte[] uuid;
 
     /**
      * 用户名
@@ -73,6 +72,4 @@ public class Accounts implements Serializable {
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
-
-
 }

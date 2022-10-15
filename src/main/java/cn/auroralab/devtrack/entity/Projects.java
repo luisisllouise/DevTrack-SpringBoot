@@ -19,14 +19,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Projects implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * 项目uuid
      */
-    @TableId(type = IdType.INPUT)
-    private byte[] projectUuid;
+    @TableId(value = "project_uuid", type = IdType.INPUT)
+    private byte[] uuid;
 
     /**
      * 项目的数字id
@@ -82,6 +81,4 @@ public class Projects implements Serializable {
      * 项目删除时间
      */
     private LocalDateTime deleteTime;
-
-
 }

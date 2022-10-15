@@ -18,14 +18,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ProjectRoles implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * 角色uuid
      */
-    @TableId(type = IdType.INPUT)
-    private byte[] roleUuid;
+    @TableId(value = "role_uuid", type = IdType.INPUT)
+    private byte[] uuid;
 
     /**
      * 角色所属项目的uuid
@@ -66,6 +65,4 @@ public class ProjectRoles implements Serializable {
      * 删除任务权限
      */
     private Boolean deleteTask;
-
-
 }
