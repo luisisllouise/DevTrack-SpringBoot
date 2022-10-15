@@ -3,6 +3,7 @@ package cn.auroralab.devtrack.controller;
 
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.service.AccountsService;
+import cn.auroralab.devtrack.vo.SignUpResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,5 +27,5 @@ public class AccountsController {
 
     @GetMapping("/signup")
     @ResponseBody
-    public boolean signUp(SignUpForm form) { return accountsService.signUp(form); }
+    public SignUpResultVO signUp(SignUpForm form) { return accountsService.signUp(form); }
 }
