@@ -13,6 +13,4 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-10-14
  */
 @Mapper
-public interface AccountsMapper extends BaseMapper<Accounts> {
-
-}
+public interface AccountsMapper extends BaseMapper<Accounts> { }

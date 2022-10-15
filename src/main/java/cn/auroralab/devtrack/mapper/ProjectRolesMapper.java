@@ -13,6 +13,4 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-10-14
  */
 @Mapper
-public interface ProjectRolesMapper extends BaseMapper<ProjectRoles> {
-
-}
+public interface ProjectRolesMapper extends BaseMapper<ProjectRoles> { }
