@@ -3,6 +3,8 @@ package cn.auroralab.devtrack.entity;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,13 +19,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ProjectTasks implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * 任务uuid
      */
-    private byte[] taskUuid;
+    @TableId(value = "task_uuid", type = IdType.INPUT)
+    private byte[] uuid;
 
     /**
      * 任务所属的项目uuid
@@ -109,6 +111,4 @@ public class ProjectTasks implements Serializable {
      * 任务删除时间
      */
     private LocalDateTime deleteTime;
-
-
 }

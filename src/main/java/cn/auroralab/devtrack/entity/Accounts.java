@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.sql.Blob;
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,13 +20,13 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Accounts implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * 用户uuid
      */
-    private byte[] userUuid;
+    @TableId(value = "user_uuid", type = IdType.INPUT)
+    private byte[] uuid;
 
     /**
      * 用户名
@@ -70,6 +72,4 @@ public class Accounts implements Serializable {
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
-
-
 }
