@@ -2,6 +2,7 @@ package cn.auroralab.devtrack.mapper;
 
 import cn.auroralab.devtrack.entity.ProjectTasks;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Guanyu Hu
  * @since 2022-10-14
  */
+@Mapper
 public interface ProjectTasksMapper extends BaseMapper<ProjectTasks> {
 
 }

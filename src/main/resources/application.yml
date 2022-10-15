@@ -1,0 +1,12 @@
+server:
+    port: 8181
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://auroralab.mysql.rds.aliyuncs.com:3306/devtrack_database
+        username: devtrack
+        password: DevTrack@2022
+mybatis-plus:
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    mapper-locations: cn/auroralab/devtrack/mapper/xml/*.xml
