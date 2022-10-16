@@ -4,12 +4,14 @@ import cn.auroralab.devtrack.entity.Accounts;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.mapper.AccountsMapper;
 import cn.auroralab.devtrack.service.AccountsService;
+import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,12 +27,13 @@ public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> i
     /**
      * 最大尝试创建uuid的次数。
      */
-    private static int MAX_COUNT_OF_TRY_TO_CREATE_UUID = 5;
+    private static final int MAX_COUNT_OF_TRY_TO_CREATE_UUID = 5;
 
     @Autowired
     private AccountsMapper accountsMapper;
+    @Autowired
+    private EmailService emailService;
 
-    @Override
     public SignUpResultVO signUp(SignUpForm form) {
         QueryWrapper<Accounts> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", form.getUsername());
