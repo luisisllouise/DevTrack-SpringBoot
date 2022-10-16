@@ -8,9 +8,7 @@ import cn.auroralab.devtrack.vo.SignUpResultVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * <p>
  * 用户账号信息 服务类
- * </p>
  *
  * @author Guanyu Hu
  * @since 2022-10-14
