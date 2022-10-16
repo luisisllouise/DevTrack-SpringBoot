@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- * 
- * </p>
+ * 验证码业务映射表
  *
  * @author Guanyu Hu
  * @since 2022-10-16
@@ -43,6 +41,4 @@ import lombok.EqualsAndHashCode;
      * 业务时间
      */
       private LocalDateTime taskTime;
-
-
 }

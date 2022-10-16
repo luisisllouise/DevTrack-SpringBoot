@@ -10,9 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
  * 用户账号信息
- * </p>
  *
  * @author Guanyu Hu
  * @since 2022-10-14
