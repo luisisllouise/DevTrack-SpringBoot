@@ -1,11 +1,13 @@
 package cn.auroralab.devtrack.service.impl;
 
 import cn.auroralab.devtrack.entity.Accounts;
+import cn.auroralab.devtrack.form.RuleForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.mapper.AccountsMapper;
 import cn.auroralab.devtrack.service.AccountsService;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
+import cn.auroralab.devtrack.vo.ResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -53,5 +55,25 @@ public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> i
 
         accountsMapper.insert(account);
         return SignUpResultVO.SUCCESS;
+    }
+
+    @Override
+    public ResultVO login(RuleForm ruleForm) {
+        //判断用户名
+        QueryWrapper<Accounts> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", ruleForm.getUsername());
+        Accounts accounts = this.accountsMapper.selectOne(queryWrapper);
+        ResultVO Judge_result = new ResultVO();
+        if (accounts == null) {
+            Judge_result.setCode(-1);//用户名对应的数据为空，没有该用户
+        } else {//判断密码
+            if (accounts.getPasswordDigest().equals(MD5Generator.getMD5(ruleForm.getPassword()))) {
+                Judge_result.setCode(-2);//密码不正确
+            } else {
+                Judge_result.setCode(0);//用户名，密码均正确，可以登录
+                Judge_result.setData(accounts);
+            }
+        }
+        return Judge_result;
     }
 }
