@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -21,19 +22,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Guanyu Hu
  * @since 2022-10-14
  */
-@Controller
+@RestController
 @RequestMapping("/accounts")
 public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
     @GetMapping("/signup")
-    @ResponseBody
     public SignUpResultVO signUp(SignUpForm form) { return accountsService.signUp(form); }
 
     @GetMapping("/login")
     public ResultVO login(RuleForm ruleForm){
-        ResultVO login_result=this.login(ruleForm);
+        ResultVO login_result=accountsService.login(ruleForm);
         return login_result;
     }
 }
