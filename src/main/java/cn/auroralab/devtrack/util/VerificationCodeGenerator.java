@@ -18,6 +18,7 @@ public class VerificationCodeGenerator {
     private final LocalDateTime startTime;
     @Getter
     private final String verificationCode;
+    @Getter
     private final int validTime;
 
     public VerificationCodeGenerator() { this(DEFAULT_VALID_TIME); }
@@ -32,7 +33,7 @@ public class VerificationCodeGenerator {
         this.validTime = validTime;
     }
 
-    public boolean isValid(LocalDateTime currentTime) {
+    public static boolean isValid(LocalDateTime startTime, LocalDateTime currentTime, int validTime) {
         return Duration.between(startTime, currentTime).toMinutes() < validTime;
     }
 }

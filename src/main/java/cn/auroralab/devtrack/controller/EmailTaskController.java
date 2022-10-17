@@ -35,7 +35,7 @@ public class EmailTaskController {
         emailService.sendEmail(form.getEmail(), subject, text, true);
 
         resultVO.setSuccess(true);
-        resultVO.setTaskUUID(verificationCodeResult.getVerificationCodeRecord().getTaskUuid());
+        resultVO.setTaskUUID(verificationCodeResult.getVerificationCodeRecord().getUuid());
         return resultVO;
     }
 }

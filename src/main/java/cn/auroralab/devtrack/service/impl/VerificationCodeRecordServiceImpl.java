@@ -31,19 +31,19 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
         VerificationCodeRecord verificationCodeRecord = new VerificationCodeRecord();
         int createUUIDCount = 0;
         while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
-            verificationCodeRecord.setTaskUuid(UUIDGenerator.getUUID());
+            verificationCodeRecord.setUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
-            queryWrapper.eq("task_uuid", verificationCodeRecord.getTaskUuid());
+            queryWrapper.eq("task_uuid", verificationCodeRecord.getUuid());
             if (verificationCodeRecordMapper.selectOne(queryWrapper) == null) break;
             else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return VerificationCodeResultVO.UNABLE_TO_CREATE_UUID;
         }
-        verificationCodeRecord.setTaskType(form.getTaskType());
-        verificationCodeRecord.setEmail(form.getEmail());
-
         VerificationCodeGenerator generator = new VerificationCodeGenerator();
 
-        verificationCodeRecord.setVerificationCode(generator.getVerificationCode());
         verificationCodeRecord.setTaskTime(generator.getStartTime());
+        verificationCodeRecord.setTaskType(form.getTaskType());
+        verificationCodeRecord.setEmail(form.getEmail());
+        verificationCodeRecord.setVerificationCode(generator.getVerificationCode());
+        verificationCodeRecord.setValidTime(generator.getValidTime());
 
         verificationCodeRecordMapper.insert(verificationCodeRecord);
 
