@@ -23,7 +23,7 @@ public class VerificationCodeGenerator {
 
     public VerificationCodeGenerator(int validTime) {
         Random random = new SecureRandom();
-        this.verificationCode = String.valueOf(random.nextInt(900000) + 1000);
+        this.verificationCode = String.valueOf(random.nextInt(1000000));
         this.startTime = LocalDateTime.now();
         this.validTime = validTime;
     }
