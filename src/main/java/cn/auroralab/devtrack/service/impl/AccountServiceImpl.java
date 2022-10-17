@@ -7,11 +7,11 @@ import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.mapper.AccountMapper;
 import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
-import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.vo.SignInResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
+import cn.auroralab.devtrack.vo.StatusCode;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,17 +43,17 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         QueryWrapper<VerificationCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
         verificationCodeRecordQueryWrapper.eq("task_uuid", form.getVerificationCodeRecordUUID());
         VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
-        if (verificationCodeRecord == null) return SignUpResultVO.NOT_FIND_VERIFICATION_CODE_RECORD;
+        if (verificationCodeRecord == null) return new SignUpResultVO(StatusCode.VCODE_NO_RECORD);
 
         boolean sameEmail = verificationCodeRecord.getEmail().equals(form.getEmail());
         boolean sameVerificationCode = verificationCodeRecord.getVerificationCode().equals(form.getVerificationCode());
-        if (!sameEmail) return SignUpResultVO.VERIFICATION_CODE_INVALID;
-        if (!sameVerificationCode) return SignUpResultVO.VERIFICATION_CODE_ERROR;
-        if (!verificationCodeRecord.isValid(LocalDateTime.now())) return SignUpResultVO.VERIFICATION_CODE_INVALID;
+        if (!sameEmail) return new SignUpResultVO(StatusCode.VCODE_NO_RECORD);
+        if (!sameVerificationCode) return new SignUpResultVO(StatusCode.VCODE_ERROR);
+        if (!verificationCodeRecord.isValid(LocalDateTime.now())) return new SignUpResultVO(StatusCode.VCODE_INVALID);
 
         QueryWrapper<Account> accountQueryWrapper = new QueryWrapper<>();
         accountQueryWrapper.eq("username", form.getUsername());
-        if (accountMapper.selectOne(accountQueryWrapper) != null) return SignUpResultVO.USER_EXISTS;
+        if (accountMapper.selectOne(accountQueryWrapper) != null) return new SignUpResultVO(StatusCode.USER_EXISTS);
 
         int createUUIDCount = 0;
 
@@ -63,7 +63,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             createUUIDCount++;
             accountQueryWrapper.eq("user_uuid", account.getUuid());
             if (accountMapper.selectOne(accountQueryWrapper) == null) break;
-            else if (createUUIDCount == MAX_COUNT_OF_TRY_TO_CREATE_UUID) return SignUpResultVO.UNABLE_TO_CREATE_UUID;
+            else if (createUUIDCount == MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new SignUpResultVO(StatusCode.UUID_CONFLICT);
         }
         account.setUsername(form.getUsername());
         account.setPasswordDigest(MD5Generator.getMD5(form.getPassword()));
@@ -71,10 +71,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         account.setPhone(form.getPhone());
 
         accountMapper.insert(account);
-        return SignUpResultVO.SUCCESS;
+        return new SignUpResultVO(StatusCode.SUCCESS);
     }
+
     /**
      * 用户登录，并对数据库中的last_login_time进行更新
+     *
      * @param ruleForm
      * @return
      */
@@ -92,10 +94,10 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 Judge_result.setCode(-2);//密码不正确
             } else {
                 Judge_result.setCode(0);//用户名，密码均正确，可以登录
-                Account accounts1=new Account();//动态更新last_login_time
+                Account accounts1 = new Account();//动态更新last_login_time
                 accounts1.setUsername(accounts.getUsername());
                 accounts1.setLastLoginTime(LocalDateTime.now());
-                accountMapper.update(accounts1,queryWrapper);//更新至数据库
+                accountMapper.update(accounts1, queryWrapper);//更新至数据库
                 Judge_result.setData(accounts);
             }
         }

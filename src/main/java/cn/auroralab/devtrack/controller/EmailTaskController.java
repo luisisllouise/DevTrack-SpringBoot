@@ -4,6 +4,7 @@ import cn.auroralab.devtrack.form.VerificationCodeForm;
 import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.service.VerificationCodeRecordService;
 import cn.auroralab.devtrack.vo.SendVerificationCodeEmailResultVO;
+import cn.auroralab.devtrack.vo.StatusCode;
 import cn.auroralab.devtrack.vo.VerificationCodeResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ public class EmailTaskController {
         SendVerificationCodeEmailResultVO resultVO = new SendVerificationCodeEmailResultVO();
         var verificationCodeResult = verificationCodeRecordService.signUpVerificationCode(form);
 
-        if (!verificationCodeResult.equals(VerificationCodeResultVO.SUCCESS)) {
+        if (verificationCodeResult.getStatusCode() != StatusCode.SUCCESS.code) {
             resultVO.setSuccess(false);
             return resultVO;
         }

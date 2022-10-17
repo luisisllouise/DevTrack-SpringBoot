@@ -7,6 +7,7 @@ import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
 import cn.auroralab.devtrack.service.VerificationCodeRecordService;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.util.VerificationCodeGenerator;
+import cn.auroralab.devtrack.vo.StatusCode;
 import cn.auroralab.devtrack.vo.VerificationCodeResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -35,7 +36,7 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
             createUUIDCount++;
             queryWrapper.eq("task_uuid", verificationCodeRecord.getUuid());
             if (verificationCodeRecordMapper.selectOne(queryWrapper) == null) break;
-            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return VerificationCodeResultVO.UNABLE_TO_CREATE_UUID;
+            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new VerificationCodeResultVO(StatusCode.UUID_CONFLICT);
         }
         VerificationCodeGenerator generator = new VerificationCodeGenerator();
 
@@ -47,8 +48,6 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
 
         verificationCodeRecordMapper.insert(verificationCodeRecord);
 
-        VerificationCodeResultVO resultVO = VerificationCodeResultVO.SUCCESS;
-        resultVO.setVerificationCodeRecord(verificationCodeRecord);
-        return resultVO;
+        return new VerificationCodeResultVO(StatusCode.SUCCESS, verificationCodeRecord);
     }
 }
