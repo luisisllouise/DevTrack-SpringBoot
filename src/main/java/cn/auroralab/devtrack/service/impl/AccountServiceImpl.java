@@ -7,6 +7,7 @@ import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.mapper.AccountMapper;
 import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
+import cn.auroralab.devtrack.util.ConvertTool;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.vo.SignInResultVO;
@@ -42,7 +43,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     public SignUpResultVO signUp(SignUpForm form) {
         QueryWrapper<VerificationCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
-        verificationCodeRecordQueryWrapper.eq("task_uuid", form.getVerificationCodeRecordUUID());
+        verificationCodeRecordQueryWrapper.eq("task_uuid", ConvertTool.hexStringToBytes(form.getVerificationCodeRecordUUID()));
         VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
         if (verificationCodeRecord == null) return new SignUpResultVO(StatusCodeEnum.VCODE_NO_RECORD);
 

@@ -3,8 +3,8 @@ package cn.auroralab.devtrack.vo;
 import lombok.Data;
 
 @Data
-public class SendVCodeEmailResultVO extends ResultVO<byte[]> {
+public class SendVCodeEmailResultVO extends ResultVO<String> {
     public SendVCodeEmailResultVO(StatusCodeEnum statusCodeEnum) { super(statusCodeEnum); }
 
-    public SendVCodeEmailResultVO(StatusCodeEnum statusCodeEnum, byte[] taskUUID) { super(statusCodeEnum, taskUUID); }
+    public SendVCodeEmailResultVO(StatusCodeEnum statusCodeEnum, String taskUUID) { super(statusCodeEnum, taskUUID); }
 }
