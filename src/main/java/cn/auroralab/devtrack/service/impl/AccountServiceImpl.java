@@ -30,7 +30,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * 最大尝试创建uuid的次数。
      */
     private static final int MAX_COUNT_OF_TRY_TO_CREATE_UUID = 5;
-
+ 
     @Autowired
     private AccountMapper accountMapper;
     @Autowired
