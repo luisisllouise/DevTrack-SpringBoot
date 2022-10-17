@@ -76,20 +76,20 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @return
      */
     @Override
-    public SignInResultVO login(RuleForm ruleForm) {
+    public ResultVO login(RuleForm ruleForm) {
         //判断用户名
-        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Accounts> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", ruleForm.getUsername());
-        Account account = this.accountMapper.selectOne(queryWrapper);
-        SignInResultVO Judge_result = new SignInResultVO();
-        if (account == null) {
+        Accounts accounts = this.accountsMapper.selectOne(queryWrapper);
+        ResultVO Judge_result = new ResultVO();
+        if (accounts == null) {
             Judge_result.setCode(-1);//用户名对应的数据为空，没有该用户
         } else {//判断密码
-            if (account.getPasswordDigest().equals(MD5Generator.getMD5(ruleForm.getPassword()))) {
+            if (accounts.getPasswordDigest().equals(MD5Generator.getMD5(ruleForm.getPassword()))) {
                 Judge_result.setCode(-2);//密码不正确
             } else {
                 Judge_result.setCode(0);//用户名，密码均正确，可以登录
-                Judge_result.setData(account);
+                Judge_result.setData(accounts);
             }
         }
         return Judge_result;
