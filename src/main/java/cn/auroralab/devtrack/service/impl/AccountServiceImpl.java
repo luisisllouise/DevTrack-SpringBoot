@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 /**
- * <p>
  * 用户账号信息 服务实现类
- * </p>
  *
  * @author Guanyu Hu
  * @since 2022-10-14
@@ -73,6 +71,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return SignUpResultVO.SUCCESS;
     }
 
+    /**
+     * 用户登录，并对数据库中的last_login_time进行更新
+     * @param ruleForm
+     * @return
+     */
     @Override
     public SignInResultVO login(RuleForm ruleForm) {
         //判断用户名
