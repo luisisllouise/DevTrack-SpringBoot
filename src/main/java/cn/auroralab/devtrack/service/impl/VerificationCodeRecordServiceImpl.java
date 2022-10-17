@@ -1,10 +1,10 @@
 package cn.auroralab.devtrack.service.impl;
 
-import cn.auroralab.devtrack.entity.VerificationCodeList;
+import cn.auroralab.devtrack.entity.VerificationCodeRecord;
 import cn.auroralab.devtrack.environment.Environment;
 import cn.auroralab.devtrack.form.VerificationCodeForm;
-import cn.auroralab.devtrack.mapper.VerificationCodeListMapper;
-import cn.auroralab.devtrack.service.VerificationCodeListService;
+import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
+import cn.auroralab.devtrack.service.VerificationCodeRecordService;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.util.VerificationCodeGenerator;
 import cn.auroralab.devtrack.vo.VerificationCodeResultVO;
@@ -22,34 +22,33 @@ import org.springframework.stereotype.Service;
  * @since 2022-10-16
  */
 @Service
-public class VerificationCodeListServiceImpl extends ServiceImpl<VerificationCodeListMapper, VerificationCodeList> implements VerificationCodeListService {
-
+public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMapper, VerificationCodeRecord> implements VerificationCodeRecordService {
     @Autowired
-    private VerificationCodeListMapper verificationCodeListMapper;
+    private VerificationCodeRecordMapper verificationCodeRecordMapper;
 
     public VerificationCodeResultVO signUpVerificationCode(VerificationCodeForm form) {
-        QueryWrapper<VerificationCodeList> queryWrapper = new QueryWrapper<>();
-        VerificationCodeList verificationCode = new VerificationCodeList();
+        QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
+        VerificationCodeRecord verificationCodeRecord = new VerificationCodeRecord();
         int createUUIDCount = 0;
         while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
-            verificationCode.setTaskUuid(UUIDGenerator.getUUID());
+            verificationCodeRecord.setTaskUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
-            queryWrapper.eq("task_uuid", verificationCode.getTaskUuid());
-            if (verificationCodeListMapper.selectOne(queryWrapper) == null) break;
+            queryWrapper.eq("task_uuid", verificationCodeRecord.getTaskUuid());
+            if (verificationCodeRecordMapper.selectOne(queryWrapper) == null) break;
             else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return VerificationCodeResultVO.UNABLE_TO_CREATE_UUID;
         }
-        verificationCode.setTaskType(form.getTaskType());
-        verificationCode.setEmail(form.getEmail());
+        verificationCodeRecord.setTaskType(form.getTaskType());
+        verificationCodeRecord.setEmail(form.getEmail());
 
         VerificationCodeGenerator generator = new VerificationCodeGenerator();
 
-        verificationCode.setVerificationCode(generator.getVerificationCode());
-        verificationCode.setTaskTime(generator.getStartTime());
+        verificationCodeRecord.setVerificationCode(generator.getVerificationCode());
+        verificationCodeRecord.setTaskTime(generator.getStartTime());
 
-        verificationCodeListMapper.insert(verificationCode);
+        verificationCodeRecordMapper.insert(verificationCodeRecord);
 
         VerificationCodeResultVO resultVO = VerificationCodeResultVO.SUCCESS;
-        resultVO.setVerificationCodeRecord(verificationCode);
+        resultVO.setVerificationCodeRecord(verificationCodeRecord);
         return resultVO;
     }
 }
