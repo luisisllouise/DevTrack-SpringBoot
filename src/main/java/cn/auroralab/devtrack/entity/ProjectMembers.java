@@ -8,9 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
  * 项目成员映射
- * </p>
  *
  * @author Guanyu Hu
  * @since 2022-10-14

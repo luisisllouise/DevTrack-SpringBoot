@@ -42,7 +42,8 @@ public class MyBatisPlusAutoGenerator {
                                         "project_members",
                                         "project_roles",
                                         "project_tasks",
-                                        "projects"
+                                        "projects",
+                                        "verification_code_list"
                                 )
                                 .setNaming(NamingStrategy.underline_to_camel)
                                 .setColumnNaming(NamingStrategy.underline_to_camel)
