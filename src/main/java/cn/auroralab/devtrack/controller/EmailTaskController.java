@@ -3,9 +3,9 @@ package cn.auroralab.devtrack.controller;
 import cn.auroralab.devtrack.form.VerificationCodeForm;
 import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.service.VerificationCodeRecordService;
-import cn.auroralab.devtrack.vo.SendVerificationCodeEmailResultVO;
+import cn.auroralab.devtrack.vo.SendVCodeEmailResultVO;
 import cn.auroralab.devtrack.vo.StatusCode;
-import cn.auroralab.devtrack.vo.VerificationCodeResultVO;
+import cn.auroralab.devtrack.vo.VCodeResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,23 +20,17 @@ public class EmailTaskController {
     private VerificationCodeRecordService verificationCodeRecordService;
 
     @GetMapping("/send-verification-code")
-    public SendVerificationCodeEmailResultVO sendVerificationCodeEmail(VerificationCodeForm form) {
-        SendVerificationCodeEmailResultVO resultVO = new SendVerificationCodeEmailResultVO();
-        var verificationCodeResult = verificationCodeRecordService.signUpVerificationCode(form);
-
-        if (verificationCodeResult.getStatusCode() != StatusCode.SUCCESS.code) {
-            resultVO.setSuccess(false);
-            return resultVO;
-        }
+    public SendVCodeEmailResultVO sendVerificationCodeEmail(VerificationCodeForm form) {
+        VCodeResultVO verificationCodeResult = verificationCodeRecordService.signUpVerificationCode(form);
+        if (verificationCodeResult.getStatusCode() != StatusCode.SUCCESS.code)
+            return new SendVCodeEmailResultVO(StatusCode.parse(verificationCodeResult.getStatusCode()));
 
         String subject = "AuroraLab Verification Code";
         String text = "<p>AuroraLab</p>" + "\n" +
-                "<span>Your verification code is: " + verificationCodeResult.getVerificationCodeRecord().getVerificationCode() + ".</span><br/>" +
+                "<span>Your verification code is: " + verificationCodeResult.getResultData().getVerificationCode() + ".</span><br/>" +
                 "<span>The verification code is valid in 5 minutes.</span>";
         emailService.sendEmail(form.getEmail(), subject, text, true);
 
-        resultVO.setSuccess(true);
-        resultVO.setTaskUUID(verificationCodeResult.getVerificationCodeRecord().getUuid());
-        return resultVO;
+        return new SendVCodeEmailResultVO(StatusCode.SUCCESS, verificationCodeResult.getResultData().getUuid());
     }
 }

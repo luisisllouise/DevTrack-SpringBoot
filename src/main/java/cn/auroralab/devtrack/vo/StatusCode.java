@@ -1,5 +1,8 @@
 package cn.auroralab.devtrack.vo;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * 状态码枚举
  *
@@ -27,4 +30,10 @@ public enum StatusCode {
     public final int code;
 
     StatusCode(int code) { this.code = code; }
+
+    public static StatusCode parse(int code) {
+        Optional<StatusCode> any = Arrays.stream(StatusCode.class.getEnumConstants())
+                .filter(e -> e.code == code).findAny();
+        return any.orElse(UNKNOWN_ERROR);
+    }
 }
