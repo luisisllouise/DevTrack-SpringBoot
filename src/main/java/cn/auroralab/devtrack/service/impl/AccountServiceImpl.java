@@ -1,9 +1,11 @@
 package cn.auroralab.devtrack.service.impl;
 
 import cn.auroralab.devtrack.entity.Account;
+import cn.auroralab.devtrack.entity.VerificationCodeRecord;
 import cn.auroralab.devtrack.form.RuleForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.mapper.AccountMapper;
+import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.util.MD5Generator;
@@ -33,14 +35,25 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     private static final int MAX_COUNT_OF_TRY_TO_CREATE_UUID = 5;
 
     @Autowired
-    private AccountMapper accountsMapper;
+    private AccountMapper accountMapper;
     @Autowired
-    private EmailService emailService;
+    private VerificationCodeRecordMapper verificationCodeRecordMapper;
 
     public SignUpResultVO signUp(SignUpForm form) {
-        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", form.getUsername());
-        if (accountsMapper.selectOne(queryWrapper) != null) return SignUpResultVO.USER_EXISTS;
+        QueryWrapper<VerificationCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
+        verificationCodeRecordQueryWrapper.eq("task_uuid", form.getVerificationCodeRecordUUID());
+        VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
+        if (verificationCodeRecord == null) return SignUpResultVO.NOT_FIND_VERIFICATION_CODE_RECORD;
+
+        boolean sameEmail = verificationCodeRecord.getEmail().equals(form.getEmail());
+        boolean sameVerificationCode = verificationCodeRecord.getVerificationCode().equals(form.getVerificationCode());
+        if (!sameEmail) return SignUpResultVO.VERIFICATION_CODE_INVALID;
+        if (!sameVerificationCode) return SignUpResultVO.VERIFICATION_CODE_ERROR;
+        if (!verificationCodeRecord.isValid(LocalDateTime.now())) return SignUpResultVO.VERIFICATION_CODE_INVALID;
+
+        QueryWrapper<Account> accountQueryWrapper = new QueryWrapper<>();
+        accountQueryWrapper.eq("username", form.getUsername());
+        if (accountMapper.selectOne(accountQueryWrapper) != null) return SignUpResultVO.USER_EXISTS;
 
         int createUUIDCount = 0;
 
@@ -48,8 +61,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         while (createUUIDCount < MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
             account.setUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
-            queryWrapper.eq("user_uuid", account.getUuid());
-            if (accountsMapper.selectOne(queryWrapper) == null) break;
+            accountQueryWrapper.eq("user_uuid", account.getUuid());
+            if (accountMapper.selectOne(accountQueryWrapper) == null) break;
             else if (createUUIDCount == MAX_COUNT_OF_TRY_TO_CREATE_UUID) return SignUpResultVO.UNABLE_TO_CREATE_UUID;
         }
         account.setUsername(form.getUsername());
@@ -57,7 +70,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         account.setEmail(form.getEmail());
         account.setPhone(form.getPhone());
 
-        accountsMapper.insert(account);
+        accountMapper.insert(account);
         return SignUpResultVO.SUCCESS;
     }
     /**
@@ -70,7 +83,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         //判断用户名
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", ruleForm.getUsername());
-        Account accounts = this.accountsMapper.selectOne(queryWrapper);
+        Account accounts = this.accountMapper.selectOne(queryWrapper);
         SignInResultVO Judge_result = new SignInResultVO();
         if (accounts == null) {
             Judge_result.setCode(-1);//用户名对应的数据为空，没有该用户
@@ -82,7 +95,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 Account accounts1=new Account();//动态更新last_login_time
                 accounts1.setUsername(accounts.getUsername());
                 accounts1.setLastLoginTime(LocalDateTime.now());
-                accountsMapper.update(accounts1,queryWrapper);//更新至数据库
+                accountMapper.update(accounts1,queryWrapper);//更新至数据库
                 Judge_result.setData(accounts);
             }
         }
