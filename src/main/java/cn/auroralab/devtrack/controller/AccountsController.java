@@ -1,6 +1,6 @@
 package cn.auroralab.devtrack.controller;
 
-import cn.auroralab.devtrack.form.RuleForm;
+import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.vo.SignInResultVO;
@@ -26,8 +26,8 @@ public class AccountsController {
     public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
 
     @GetMapping("/login")
-    public SignInResultVO login(RuleForm ruleForm) {
-        SignInResultVO login_result = accountService.login(ruleForm);
+    public SignInResultVO login(SignInForm signInForm) {
+        SignInResultVO login_result = accountService.login(signInForm);
         return login_result;
     }
 }

@@ -7,7 +7,8 @@ import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
 import cn.auroralab.devtrack.service.VerificationCodeRecordService;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.util.VerificationCodeGenerator;
-import cn.auroralab.devtrack.vo.VerificationCodeResultVO;
+import cn.auroralab.devtrack.vo.StatusCodeEnum;
+import cn.auroralab.devtrack.vo.VCodeResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
     @Autowired
     private VerificationCodeRecordMapper verificationCodeRecordMapper;
 
-    public VerificationCodeResultVO signUpVerificationCode(VerificationCodeForm form) {
+    public VCodeResultVO signUpVerificationCode(VerificationCodeForm form) {
         QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
         VerificationCodeRecord verificationCodeRecord = new VerificationCodeRecord();
         int createUUIDCount = 0;
@@ -35,7 +36,7 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
             createUUIDCount++;
             queryWrapper.eq("task_uuid", verificationCodeRecord.getUuid());
             if (verificationCodeRecordMapper.selectOne(queryWrapper) == null) break;
-            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return VerificationCodeResultVO.UNABLE_TO_CREATE_UUID;
+            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new VCodeResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
         VerificationCodeGenerator generator = new VerificationCodeGenerator();
 
@@ -47,8 +48,6 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
 
         verificationCodeRecordMapper.insert(verificationCodeRecord);
 
-        VerificationCodeResultVO resultVO = VerificationCodeResultVO.SUCCESS;
-        resultVO.setVerificationCodeRecord(verificationCodeRecord);
-        return resultVO;
+        return new VCodeResultVO(StatusCodeEnum.SUCCESS, verificationCodeRecord);
     }
 }
