@@ -1,24 +1,21 @@
 package cn.auroralab.devtrack.service.impl;
 
-import cn.auroralab.devtrack.entity.Accounts;
+import cn.auroralab.devtrack.entity.Account;
 import cn.auroralab.devtrack.form.RuleForm;
 import cn.auroralab.devtrack.form.SignUpForm;
-import cn.auroralab.devtrack.mapper.AccountsMapper;
-import cn.auroralab.devtrack.service.AccountsService;
+import cn.auroralab.devtrack.mapper.AccountMapper;
+import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
-import cn.auroralab.devtrack.vo.ResultVO;
+import cn.auroralab.devtrack.vo.SignInResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * <p>
@@ -29,25 +26,25 @@ import java.util.Date;
  * @since 2022-10-14
  */
 @Service
-public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> implements AccountsService {
+public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements AccountService {
     /**
      * 最大尝试创建uuid的次数。
      */
     private static final int MAX_COUNT_OF_TRY_TO_CREATE_UUID = 5;
 
     @Autowired
-    private AccountsMapper accountsMapper;
+    private AccountMapper accountsMapper;
     @Autowired
     private EmailService emailService;
 
     public SignUpResultVO signUp(SignUpForm form) {
-        QueryWrapper<Accounts> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", form.getUsername());
         if (accountsMapper.selectOne(queryWrapper) != null) return SignUpResultVO.USER_EXISTS;
 
         int createUUIDCount = 0;
 
-        Accounts account = new Accounts();
+        Account account = new Account();
         while (createUUIDCount < MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
             account.setUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
@@ -69,12 +66,12 @@ public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> i
      * @return
      */
     @Override
-    public ResultVO login(RuleForm ruleForm) {
+    public SignInResultVO login(RuleForm ruleForm) {
         //判断用户名
-        QueryWrapper<Accounts> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", ruleForm.getUsername());
-        Accounts accounts = this.accountsMapper.selectOne(queryWrapper);
-        ResultVO Judge_result = new ResultVO();
+        Account accounts = this.accountsMapper.selectOne(queryWrapper);
+        SignInResultVO Judge_result = new SignInResultVO();
         if (accounts == null) {
             Judge_result.setCode(-1);//用户名对应的数据为空，没有该用户
         } else {//判断密码
@@ -82,7 +79,7 @@ public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> i
                 Judge_result.setCode(-2);//密码不正确
             } else {
                 Judge_result.setCode(0);//用户名，密码均正确，可以登录
-                Accounts accounts1=new Accounts();//动态更新last_login_time
+                Account accounts1=new Account();//动态更新last_login_time
                 accounts1.setUsername(accounts.getUsername());
                 accounts1.setLastLoginTime(LocalDateTime.now());
                 accountsMapper.update(accounts1,queryWrapper);//更新至数据库
