@@ -3,7 +3,7 @@ package cn.auroralab.devtrack.vo;
 import cn.auroralab.devtrack.entity.VerificationCodeRecord;
 
 public class VCodeResultVO extends ResultVO<VerificationCodeRecord> {
-    public VCodeResultVO(StatusCode statusCode) { super(statusCode); }
+    public VCodeResultVO(StatusCodeEnum statusCodeEnum) { super(statusCodeEnum); }
 
-    public VCodeResultVO(StatusCode statusCode, VerificationCodeRecord record) { super(statusCode, record); }
+    public VCodeResultVO(StatusCodeEnum statusCodeEnum, VerificationCodeRecord record) { super(statusCodeEnum, record); }
 }

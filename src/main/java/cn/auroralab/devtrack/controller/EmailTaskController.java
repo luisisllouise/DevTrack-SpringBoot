@@ -4,7 +4,7 @@ import cn.auroralab.devtrack.form.VerificationCodeForm;
 import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.service.VerificationCodeRecordService;
 import cn.auroralab.devtrack.vo.SendVCodeEmailResultVO;
-import cn.auroralab.devtrack.vo.StatusCode;
+import cn.auroralab.devtrack.vo.StatusCodeEnum;
 import cn.auroralab.devtrack.vo.VCodeResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +22,8 @@ public class EmailTaskController {
     @GetMapping("/send-verification-code")
     public SendVCodeEmailResultVO sendVerificationCodeEmail(VerificationCodeForm form) {
         VCodeResultVO verificationCodeResult = verificationCodeRecordService.signUpVerificationCode(form);
-        if (verificationCodeResult.getStatusCode() != StatusCode.SUCCESS.code)
-            return new SendVCodeEmailResultVO(StatusCode.parse(verificationCodeResult.getStatusCode()));
+        if (verificationCodeResult.getStatusCode() != StatusCodeEnum.SUCCESS.code)
+            return new SendVCodeEmailResultVO(StatusCodeEnum.parse(verificationCodeResult.getStatusCode()));
 
         String subject = "AuroraLab Verification Code";
         String text = "<p>AuroraLab</p>" + "\n" +
@@ -31,6 +31,6 @@ public class EmailTaskController {
                 "<span>The verification code is valid in 5 minutes.</span>";
         emailService.sendEmail(form.getEmail(), subject, text, true);
 
-        return new SendVCodeEmailResultVO(StatusCode.SUCCESS, verificationCodeResult.getResultData().getUuid());
+        return new SendVCodeEmailResultVO(StatusCodeEnum.SUCCESS, verificationCodeResult.getResultData().getUuid());
     }
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SendVCodeEmailResultVO extends ResultVO<byte[]> {
-    public SendVCodeEmailResultVO(StatusCode statusCode) { super(statusCode); }
+    public SendVCodeEmailResultVO(StatusCodeEnum statusCodeEnum) { super(statusCodeEnum); }
 
-    public SendVCodeEmailResultVO(StatusCode statusCode, byte[] taskUUID) { super(statusCode, taskUUID); }
+    public SendVCodeEmailResultVO(StatusCodeEnum statusCodeEnum, byte[] taskUUID) { super(statusCodeEnum, taskUUID); }
 }

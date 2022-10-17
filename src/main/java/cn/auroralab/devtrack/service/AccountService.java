@@ -1,7 +1,7 @@
 package cn.auroralab.devtrack.service;
 
 import cn.auroralab.devtrack.entity.Account;
-import cn.auroralab.devtrack.form.RuleForm;
+import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.vo.SignInResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
@@ -15,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AccountService extends IService<Account> {
     SignUpResultVO signUp(SignUpForm form);
-    SignInResultVO login(RuleForm ruleForm);
+    SignInResultVO login(SignInForm signInForm);
 }

@@ -3,7 +3,7 @@ package cn.auroralab.devtrack.form;
 import lombok.Data;
 
 @Data
-public class RuleForm {
+public class SignInForm {
     private String username;
     private String password;
 }

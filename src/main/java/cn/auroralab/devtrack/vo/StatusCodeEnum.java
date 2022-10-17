@@ -9,7 +9,7 @@ import java.util.Optional;
  * @author Guanyu Hu
  * @since 2022-10-17
  */
-public enum StatusCode {
+public enum StatusCodeEnum {
     UNKNOWN_ERROR(0),           // 未知错误
 
     SUCCESS(100),               // 成功
@@ -29,10 +29,10 @@ public enum StatusCode {
     ;
     public final int code;
 
-    StatusCode(int code) { this.code = code; }
+    StatusCodeEnum(int code) { this.code = code; }
 
-    public static StatusCode parse(int code) {
-        Optional<StatusCode> any = Arrays.stream(StatusCode.class.getEnumConstants())
+    public static StatusCodeEnum parse(int code) {
+        Optional<StatusCodeEnum> any = Arrays.stream(StatusCodeEnum.class.getEnumConstants())
                 .filter(e -> e.code == code).findAny();
         return any.orElse(UNKNOWN_ERROR);
     }
