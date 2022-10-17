@@ -1,8 +1,11 @@
 package cn.auroralab.devtrack.controller;
 
+import cn.auroralab.devtrack.entity.Account;
+import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.service.AccountService;
+import cn.auroralab.devtrack.vo.EditProfileResultVO;
 import cn.auroralab.devtrack.vo.SignInResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +32,10 @@ public class AccountsController {
     public SignInResultVO login(SignInForm signInForm) {
         SignInResultVO login_result = accountService.login(signInForm);
         return login_result;
+    }
+
+    @GetMapping("/editprofile")
+    public EditProfileResultVO editprofile(EditProfileForm editProfileForm){
+        return accountService.editprofile(editProfileForm);
     }
 }
