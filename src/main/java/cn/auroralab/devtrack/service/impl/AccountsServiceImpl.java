@@ -12,9 +12,13 @@ import cn.auroralab.devtrack.vo.ResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -59,7 +63,11 @@ public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> i
         accountsMapper.insert(account);
         return SignUpResultVO.SUCCESS;
     }
-
+    /**
+     * 用户登录，并对数据库中的last_login_time进行更新
+     * @param ruleForm
+     * @return
+     */
     @Override
     public ResultVO login(RuleForm ruleForm) {
         //判断用户名
@@ -74,6 +82,10 @@ public class AccountsServiceImpl extends ServiceImpl<AccountsMapper, Accounts> i
                 Judge_result.setCode(-2);//密码不正确
             } else {
                 Judge_result.setCode(0);//用户名，密码均正确，可以登录
+                Accounts accounts1=new Accounts();//动态更新last_login_time
+                accounts1.setUsername(accounts.getUsername());
+                accounts1.setLastLoginTime(LocalDateTime.now());
+                accountsMapper.update(accounts1,queryWrapper);//更新至数据库
                 Judge_result.setData(accounts);
             }
         }
