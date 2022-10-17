@@ -27,49 +27,44 @@ public class Account implements Serializable {
      */
     @TableId(value = "user_uuid", type = IdType.INPUT)
     private byte[] uuid;
-
     /**
      * 用户名
      */
     private String username;
-
     /**
      * 密码的MD5值
      */
     private byte[] passwordDigest;
-
     /**
      * 头像，使用二进制保存
      */
     private Blob avatar;
-
     /**
      * 昵称
      */
     private String nickname;
-
     /**
      * 邮箱
      */
     private String email;
-
     /**
      * 手机号
      */
     private String phone;
-
     /**
      * 注册时间
      */
     private LocalDateTime registrationTime;
-
     /**
      * 注销时间
      */
     private LocalDateTime cancellationTime;
-
     /**
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
+
+    public Account() { }
+
+    public Account(LocalDateTime lastLoginTime) { this.lastLoginTime = lastLoginTime; }
 }
