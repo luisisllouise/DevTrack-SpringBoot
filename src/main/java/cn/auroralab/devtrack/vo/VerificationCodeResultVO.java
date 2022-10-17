@@ -1,6 +1,6 @@
 package cn.auroralab.devtrack.vo;
 
-import cn.auroralab.devtrack.entity.VerificationCodeList;
+import cn.auroralab.devtrack.entity.VerificationCodeRecord;
 import lombok.Data;
 
 @Data
@@ -9,7 +9,7 @@ public class VerificationCodeResultVO {
     public static final VerificationCodeResultVO UNABLE_TO_CREATE_UUID = new VerificationCodeResultVO(1);
 
     private final int statusCode;
-    private VerificationCodeList verificationCodeRecord;
+    private VerificationCodeRecord verificationCodeRecord;
 
     private VerificationCodeResultVO(int statusCode) { this.statusCode = statusCode; }
 }

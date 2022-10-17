@@ -1,6 +1,6 @@
 package cn.auroralab.devtrack.service;
 
-import cn.auroralab.devtrack.entity.ProjectTasks;
+import cn.auroralab.devtrack.entity.ProjectTask;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,4 +9,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author Guanyu Hu
  * @since 2022-10-14
  */
-public interface ProjectTasksService extends IService<ProjectTasks> { }
+public interface ProjectTaskService extends IService<ProjectTask> { }

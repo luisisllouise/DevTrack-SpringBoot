@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-@MapperScan("cn.auroralab.devtrack.mapper")
+// @MapperScan("cn.auroralab.devtrack.mapper")
 public class DevTrackSpringBootApplication {
     public static void main(String[] args) {
         SpringApplication.run(DevTrackSpringBootApplication.class, args);
