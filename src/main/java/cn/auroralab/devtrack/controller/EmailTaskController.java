@@ -39,7 +39,7 @@ public class EmailTaskController {
                 "            <td style=\"font-size: 0\">&nbsp;</td>\n" +
                 "            <td style=\"width: 600px\">\n" +
                 "                <div style=\"font-size: 15px\">\n" +
-                "                    <h1>AuroraLab</h1>\n" +
+                "                    <h1><img src=\"cid:logo\" style=\"max-width: 42px; max-height: 42px\"/>AuroraLab</h1>\n" +
                 "                    <h2 style=\"font-size: 22px; color: #409eff\">Please verify your email address</h2>\n" +
                 "                    <p>Your verification code is:</p>\n" +
                 "                    <h2 style=\"font-size: 22px; text-align: center\">" + vCodeResultVO.getResultData().getVerificationCode() + "</h2>\n" +

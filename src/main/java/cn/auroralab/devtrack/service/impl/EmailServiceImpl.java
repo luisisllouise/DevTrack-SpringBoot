@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmail(String senderName, String toEmail, String subject, String text, boolean html) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             mimeMessageHelper.setFrom(senderName + "<" + senderEmail + ">");
             mimeMessageHelper.setTo(toEmail);
             mimeMessageHelper.setSubject(subject);
