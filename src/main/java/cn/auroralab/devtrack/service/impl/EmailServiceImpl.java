@@ -31,10 +31,6 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    public void setText(String text) {
-        setText(text, true);
-    }
-
     public void setText(String text, boolean html) {
         try {
             mimeMessageHelper.setText(text, html);
@@ -57,10 +53,6 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-    }
-
-    public void sendEmail(String toEmail, String subject) {
-        sendEmail("AuroraLab", toEmail, subject);
     }
 
     public void sendEmail(String senderName, String toEmail, String subject) {

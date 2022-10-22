@@ -8,7 +8,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * 资源文件加载工具类，用于操作resources文件夹中的文件。
+ *
+ * @author Guanyu Hu
+ * @since 2022-10-22
+ */
 public class ResourceFileLoader {
+    /**
+     * 读取指定路径下的文件内容。
+     *
+     * @param classPath resources下的相对路径。
+     * @return 文件文本。
+     * @author Guanyu Hu
+     * @since 2022-10-22
+     */
     public static String readFile(String classPath) {
         StringBuilder res = new StringBuilder();
         try {

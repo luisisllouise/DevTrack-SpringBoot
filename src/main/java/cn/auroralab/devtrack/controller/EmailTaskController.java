@@ -41,7 +41,7 @@ public class EmailTaskController {
                 .replace("{{$vcode}}", vCodeResultVO.getResultData().getVerificationCode())
                 .replace("{{$time}}", invalidTimeString)
                 .replace("{{$email}}", form.getEmail());
-        
+
         emailService.initialize();
         emailService.setText(text);
         emailService.addImage("logo", "logo.png");
