@@ -3,6 +3,8 @@ package cn.auroralab.devtrack.service.impl;
 import cn.auroralab.devtrack.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -14,30 +16,58 @@ import javax.mail.internet.MimeMessage;
 public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
-
     @Value("${spring.mail.username}")
     private String senderEmail;
 
-    public void sendEmail(String toEmail, String subject, String text) {
-        sendEmail(toEmail, subject, text, false);
-    }
+    private MimeMessage mimeMessage;
+    private MimeMessageHelper mimeMessageHelper;
 
-    public void sendEmail(String toEmail, String subject, String text, boolean html) {
-        sendEmail("AuroraLab", toEmail, subject, text, html);
-    }
-
-    public void sendEmail(String senderName, String toEmail, String subject, String text) {
-        sendEmail(senderName, toEmail, subject, text, false);
-    }
-
-    public void sendEmail(String senderName, String toEmail, String subject, String text, boolean html) {
+    public void initialize() {
+        mimeMessage = javaMailSender.createMimeMessage();
         try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setText(String text) {
+        setText(text, true);
+    }
+
+    public void setText(String text, boolean html) {
+        try {
+            mimeMessageHelper.setText(text, html);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addImage(String cid, String classPath) {
+        try {
+            mimeMessageHelper.addInline(cid, new DefaultResourceLoader().getResource("classpath:" + classPath));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addImage(String cid, Resource resource) {
+        try {
+            mimeMessageHelper.addInline(cid, resource);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendEmail(String toEmail, String subject) {
+        sendEmail("AuroraLab", toEmail, subject);
+    }
+
+    public void sendEmail(String senderName, String toEmail, String subject) {
+        try {
             mimeMessageHelper.setFrom(senderName + "<" + senderEmail + ">");
             mimeMessageHelper.setTo(toEmail);
             mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(text, html);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();

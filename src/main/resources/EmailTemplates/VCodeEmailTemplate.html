@@ -4,20 +4,20 @@
             <td style="font-size: 0">&nbsp;</td>
             <td style="width: 600px">
                 <div style="font-size: 15px; margin-bottom: 48px">
-                    <h1><img src="logo.png" style="max-width: 42px; max-height: 42px"/>AuroraLab</h1>
+                    <h1><img src="cid:logo" style="max-width: 42px; max-height: 42px"/>AuroraLab</h1>
                     <h2 style="font-size: 22px; color: #409eff">Please verify your email address</h2>
                     <p>Your verification code is:</p>
-                    <h2 style="font-size: 22px; text-align: center">123456</h2>
+                    <h2 style="font-size: 22px; text-align: center">{{$vcode}}</h2>
                     <p>To sign up your AuroraLab ID account, please verify your email.</p>
                     <p>
                         The verification code is valid in 5 minutes and will expire on
-                        <span style="font-weight: bold">2022-01-01 00:00:00</span>.
+                        <span style="font-weight: bold">{{$time}}</span>.
                     </p>
                 </div>
                 <hr/>
                 <div style="font-size: 11px; color: #666666">
                     <p>&copy; 2022 AuroraLab</p>
-                    <p>This message was sent to test@test.test by AuroraLab.</p>
+                    <p>This message was sent to {{$email}} by AuroraLab.</p>
                     <p style="font-style: italic">
                         Note: This is an automated notification. Replies to this email address
                         are not monitored.
