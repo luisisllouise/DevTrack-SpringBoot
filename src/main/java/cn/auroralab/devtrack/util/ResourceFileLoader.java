@@ -26,7 +26,7 @@ public class ResourceFileLoader {
     public static String readFile(String classPath) {
         StringBuilder res = new StringBuilder();
         try {
-            InputStream is = new DefaultResourceLoader().getResource("classpath:VCodeEmailTemplate.html").getInputStream();
+            InputStream is = new DefaultResourceLoader().getResource("classpath:" + classPath).getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String data = null;
