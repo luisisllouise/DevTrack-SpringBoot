@@ -14,5 +14,5 @@ public class SignUpForm {
     private String email;
     private String phone;
     private String verificationCode;
-    private String verificationCodeRecordUUID;
+    //    private String verificationCodeRecordUUID;
 }
