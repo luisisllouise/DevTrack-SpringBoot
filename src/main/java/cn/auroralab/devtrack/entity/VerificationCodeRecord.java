@@ -34,7 +34,7 @@ public class VerificationCodeRecord implements Serializable {
     /**
      * 验证码业务类型
      */
-    private Integer taskType;
+    private int taskType;
     /**
      * 接收验证码的邮箱
      */
@@ -46,9 +46,13 @@ public class VerificationCodeRecord implements Serializable {
     /**
      * 验证码有效时间，单位：分钟
      */
-    private Integer validTime;
+    private int validTime;
 
-    public boolean isValid(LocalDateTime currentTime) {
-        return VerificationCodeGenerator.isValid(taskTime, currentTime, validTime);
+    public boolean isValid(LocalDateTime currentTime) { return VerificationCodeGenerator.isValid(taskTime, currentTime, validTime); }
+
+    public void setTaskType(int taskTypeCode) { this.taskType = taskTypeCode; }
+
+    public void setTaskType(TaskTypeEnum taskType) {
+        this.taskType = taskType.code;
     }
 }

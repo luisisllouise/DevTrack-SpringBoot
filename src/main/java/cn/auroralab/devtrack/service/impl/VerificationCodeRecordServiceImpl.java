@@ -1,5 +1,6 @@
 package cn.auroralab.devtrack.service.impl;
 
+import cn.auroralab.devtrack.entity.TaskTypeEnum;
 import cn.auroralab.devtrack.entity.VerificationCodeRecord;
 import cn.auroralab.devtrack.environment.Environment;
 import cn.auroralab.devtrack.form.VerificationCodeForm;
@@ -29,25 +30,25 @@ public class VerificationCodeRecordServiceImpl extends ServiceImpl<VerificationC
 
     public VCodeResultVO signUpVerificationCode(VerificationCodeForm form) {
         QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
-        VerificationCodeRecord verificationCodeRecord = new VerificationCodeRecord();
+        VerificationCodeRecord vCodeRecord = new VerificationCodeRecord();
         int createUUIDCount = 0;
         while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
-            verificationCodeRecord.setUuid(UUIDGenerator.getUUID());
+            vCodeRecord.setUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
-            queryWrapper.eq("task_uuid", verificationCodeRecord.getUuid());
+            queryWrapper.eq("task_uuid", vCodeRecord.getUuid());
             if (verificationCodeRecordMapper.selectOne(queryWrapper) == null) break;
             else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new VCodeResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
         VerificationCodeGenerator generator = new VerificationCodeGenerator();
 
-        verificationCodeRecord.setTaskTime(generator.getStartTime());
-        verificationCodeRecord.setTaskType(form.getTaskType());
-        verificationCodeRecord.setEmail(form.getEmail());
-        verificationCodeRecord.setVerificationCode(generator.getVerificationCode());
-        verificationCodeRecord.setValidTime(generator.getValidTime());
+        vCodeRecord.setTaskTime(generator.getStartTime());
+        vCodeRecord.setTaskType(TaskTypeEnum.parse(form.getTaskType()));
+        vCodeRecord.setEmail(form.getEmail());
+        vCodeRecord.setVerificationCode(generator.getVerificationCode());
+        vCodeRecord.setValidTime(generator.getValidTime());
 
-        verificationCodeRecordMapper.insert(verificationCodeRecord);
+        verificationCodeRecordMapper.insert(vCodeRecord);
 
-        return new VCodeResultVO(StatusCodeEnum.SUCCESS, verificationCodeRecord);
+        return new VCodeResultVO(StatusCodeEnum.SUCCESS, vCodeRecord);
     }
 }
