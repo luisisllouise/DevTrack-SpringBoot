@@ -1,31 +1,41 @@
 package cn.auroralab.devtrack.controller;
 
-
+import cn.auroralab.devtrack.entity.Account;
+import cn.auroralab.devtrack.form.EditProfileForm;
+import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
-import cn.auroralab.devtrack.service.AccountsService;
+import cn.auroralab.devtrack.service.AccountService;
+import cn.auroralab.devtrack.vo.EditProfileResultVO;
+import cn.auroralab.devtrack.vo.SignInResultVO;
 import cn.auroralab.devtrack.vo.SignUpResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
  * 用户账号信息 前端控制器
- * </p>
  *
  * @author Guanyu Hu
  * @since 2022-10-14
  */
-@Controller
+@RestController
 @RequestMapping("/accounts")
 public class AccountsController {
     @Autowired
-    private AccountsService accountsService;
+    private AccountService accountService;
 
     @GetMapping("/signup")
-    @ResponseBody
-    public SignUpResultVO signUp(SignUpForm form) { return accountsService.signUp(form); }
+    public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
+
+    @GetMapping("/login")
+    public SignInResultVO login(SignInForm signInForm) {
+        SignInResultVO login_result = accountService.login(signInForm);
+        return login_result;
+    }
+
+    @GetMapping("/editprofile")
+    public EditProfileResultVO editprofile(EditProfileForm editProfileForm){
+        return accountService.editprofile(editProfileForm);
+    }
 }

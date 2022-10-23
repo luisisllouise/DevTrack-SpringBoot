@@ -1,16 +1,14 @@
 package cn.auroralab.devtrack.mapper;
 
-import cn.auroralab.devtrack.entity.Accounts;
+import cn.auroralab.devtrack.entity.ProjectMember;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * <p>
- * 用户账号信息 Mapper 接口
- * </p>
+ * 项目成员映射 Mapper 接口
  *
  * @author Guanyu Hu
  * @since 2022-10-14
  */
 @Mapper
-public interface AccountsMapper extends BaseMapper<Accounts> { }
+public interface ProjectMemberMapper extends BaseMapper<ProjectMember> { }

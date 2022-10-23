@@ -5,20 +5,20 @@ import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
  * 项目列表
- * </p>
  *
  * @author Guanyu Hu
  * @since 2022-10-14
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Projects implements Serializable {
+@TableName("projects")
+public class Project implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

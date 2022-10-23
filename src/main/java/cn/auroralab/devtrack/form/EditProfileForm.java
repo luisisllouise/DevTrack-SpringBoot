@@ -2,17 +2,14 @@ package cn.auroralab.devtrack.form;
 
 import lombok.Data;
 
-/**
- * 前端注册表单
- *
- * @author Guanyu Hu
- */
 @Data
-public class SignUpForm {
+public class EditProfileForm {
     private String username;
-    private String password;
-    private String email;
+    private String nickname;
+    private String old_password;
+    private String new_password;
     private String phone;
+    private String email;
     private String verificationCode;
     private String verificationCodeRecordUUID;
 }
