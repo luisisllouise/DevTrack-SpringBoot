@@ -49,10 +49,4 @@ public class VerificationCodeRecord implements Serializable {
     private int validTime;
 
     public boolean isValid(LocalDateTime currentTime) { return VerificationCodeGenerator.isValid(taskTime, currentTime, validTime); }
-
-    public void setTaskType(int taskTypeCode) { this.taskType = taskTypeCode; }
-
-    public void setTaskType(TaskTypeEnum taskType) {
-        this.taskType = taskType.code;
-    }
 }

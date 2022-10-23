@@ -3,6 +3,7 @@ package cn.auroralab.devtrack.service.impl;
 import cn.auroralab.devtrack.entity.Account;
 import cn.auroralab.devtrack.entity.TaskTypeEnum;
 import cn.auroralab.devtrack.entity.VerificationCodeRecord;
+import cn.auroralab.devtrack.environment.Environment;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
@@ -35,25 +36,20 @@ import java.util.Objects;
  */
 @Service
 public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements AccountService {
-    /**
-     * 最大尝试创建uuid的次数。
-     */
-    private static final int MAX_COUNT_OF_TRY_TO_CREATE_UUID = 5;
-
     @Autowired
     private AccountMapper accountMapper;
     @Autowired
     private VerificationCodeRecordMapper verificationCodeRecordMapper;
 
     public SignUpResultVO signUp(SignUpForm form) {
-        QueryWrapper<VerificationCodeRecord> vCodeRecordQueryWrapper = new QueryWrapper<>();
-
-        vCodeRecordQueryWrapper
+        QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper
                 .eq("task_type", TaskTypeEnum.SIGN_UP.code)
                 .eq("email", form.getEmail())
                 .orderByDesc("task_time")
                 .last("limit 1");
-        VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(vCodeRecordQueryWrapper);
+        VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(queryWrapper);
+
         if (verificationCodeRecord == null)
             return new SignUpResultVO(StatusCodeEnum.VCODE_NO_RECORD);
         if (!Objects.equals(verificationCodeRecord.getVerificationCode(), form.getVerificationCode()))
@@ -68,12 +64,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         int createUUIDCount = 0;
 
         Account account = new Account();
-        while (createUUIDCount < MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
+        while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
             account.setUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
             accountQueryWrapper.eq("user_uuid", account.getUuid());
             if (accountMapper.selectOne(accountQueryWrapper) == null) break;
-            else if (createUUIDCount == MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
+            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
         account.setUsername(form.getUsername());
         account.setPasswordDigest(MD5Generator.getMD5(form.getPassword()));
