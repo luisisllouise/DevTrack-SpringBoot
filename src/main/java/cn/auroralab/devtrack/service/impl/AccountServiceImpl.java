@@ -2,6 +2,7 @@ package cn.auroralab.devtrack.service.impl;
 
 import cn.auroralab.devtrack.entity.Account;
 import cn.auroralab.devtrack.entity.VerificationCodeRecord;
+import cn.auroralab.devtrack.form.AvatarForm;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
@@ -11,15 +12,15 @@ import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.util.ConvertTool;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
-import cn.auroralab.devtrack.vo.EditProfileResultVO;
-import cn.auroralab.devtrack.vo.SignInResultVO;
-import cn.auroralab.devtrack.vo.SignUpResultVO;
-import cn.auroralab.devtrack.vo.StatusCodeEnum;
+import cn.auroralab.devtrack.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -53,7 +54,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         boolean sameVerificationCode = verificationCodeRecord.getVerificationCode().equals(form.getVerificationCode());
         if (!sameEmail) return new SignUpResultVO(StatusCodeEnum.VCODE_NO_RECORD);
         if (!sameVerificationCode) return new SignUpResultVO(StatusCodeEnum.VCODE_ERROR);
-        if (!verificationCodeRecord.isValid(LocalDateTime.now())) return new SignUpResultVO(StatusCodeEnum.VCODE_INVALID);
+        if (!verificationCodeRecord.isValid(LocalDateTime.now()))
+            return new SignUpResultVO(StatusCodeEnum.VCODE_INVALID);
 
         QueryWrapper<Account> accountQueryWrapper = new QueryWrapper<>();
         accountQueryWrapper.eq("username", form.getUsername());
@@ -67,7 +69,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             createUUIDCount++;
             accountQueryWrapper.eq("user_uuid", account.getUuid());
             if (accountMapper.selectOne(accountQueryWrapper) == null) break;
-            else if (createUUIDCount == MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
+            else if (createUUIDCount == MAX_COUNT_OF_TRY_TO_CREATE_UUID)
+                return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
         account.setUsername(form.getUsername());
         account.setPasswordDigest(MD5Generator.getMD5(form.getPassword()));
@@ -104,34 +107,59 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     /**
      * 用户个人信息修改，验证码与密码均验证正确后则修改成功
+     *
      * @param editProfileForm
      * @return
      */
     public EditProfileResultVO editprofile(EditProfileForm editProfileForm) {//Nickname，phone合法性在前端检查
         /*    密码校验     */
-        QueryWrapper<Account>queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("username",editProfileForm.getUsername());//查询到信息数据
-        Account account=this.accountMapper.selectOne(queryWrapper);
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", editProfileForm.getUsername());//查询到信息数据
+        Account account = this.accountMapper.selectOne(queryWrapper);
         if (account == null) return new EditProfileResultVO(StatusCodeEnum.USER_NOT_EXISTS);
         if (!Arrays.equals(account.getPasswordDigest(), MD5Generator.getMD5(editProfileForm.getOld_password())))
             return new EditProfileResultVO(StatusCodeEnum.USER_PASSWORD_ERROR);//密码验证错误
         /*   验证码校验    */
         QueryWrapper<VerificationCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
-        verificationCodeRecordQueryWrapper.eq("task_uuid", ConvertTool.hexStringToBytes( editProfileForm.getVerificationCodeRecordUUID()));
+        verificationCodeRecordQueryWrapper.eq("task_uuid", ConvertTool.hexStringToBytes(editProfileForm.getVerificationCodeRecordUUID()));
         VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
         if (verificationCodeRecord == null) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//获取验证码失败
         boolean sameEmail = verificationCodeRecord.getEmail().equals(editProfileForm.getEmail());//判断邮箱
         boolean sameVerificationCode = verificationCodeRecord.getVerificationCode().equals(editProfileForm.getVerificationCode());//判断验证码
         if (!sameEmail) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//验证码发送错误，发送至错误邮箱
         if (!sameVerificationCode) return new EditProfileResultVO(StatusCodeEnum.VCODE_ERROR);//验证码错误
-        if (!verificationCodeRecord.isValid(LocalDateTime.now())) return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
+        if (!verificationCodeRecord.isValid(LocalDateTime.now()))
+            return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
         // 均成功
-        Account target=new Account();
+        Account target = new Account();
         target.setNickname(editProfileForm.getNickname());
         target.setEmail(editProfileForm.getEmail());
         target.setPasswordDigest(MD5Generator.getMD5(editProfileForm.getNew_password()));
         target.setPhone(editProfileForm.getPhone());
-        accountMapper.update(target,queryWrapper);
+        accountMapper.update(target, queryWrapper);
         return new EditProfileResultVO(StatusCodeEnum.SUCCESS);
     }
+    /**
+     * 用户个人头像更改
+     *
+     * @param form
+     * @return
+     */
+    public ResultVO avatar(AvatarForm form) {
+        Blob blob = null;
+        MultipartFile file = form.getFile();
+        String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));//判断所传文件是否是图片文件，检查后缀名
+        if (!(type.equals("png") || type.equals("jpeg") || type.equals("jpg")))
+            return new ResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR);
+        try {
+            blob = new SerialBlob(file.getBytes());
+        } catch (Exception e) {
+            return new ResultVO(StatusCodeEnum.UNKNOWN_ERROR);//转换二进制错误，此处暂判为未知错误
+        }
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", form.getUsername());//查询到信息数据
+        accountMapper.update(new Account(blob), queryWrapper);//将头像更新至数据库
+        return new ResultVO(StatusCodeEnum.SUCCESS);
+    }
+
 }

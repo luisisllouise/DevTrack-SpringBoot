@@ -18,6 +18,7 @@ public enum StatusCodeEnum {
     USER_EXISTS(201),           // 用户已存在
     USER_NOT_EXISTS(202),       // 用户不存在
     USER_PASSWORD_ERROR(203),   // 密码错误
+    USER_AVATAR_FILETYPE_ERROR(204),       // 文件类型错误
 
     //验证码业务
     VCODE_ERROR(301),           // 验证码错误
@@ -26,6 +27,7 @@ public enum StatusCodeEnum {
 
     // 后台业务
     UUID_CONFLICT(901),         // 生成uuid时发生碰撞
+
     ;
     public final int code;
 

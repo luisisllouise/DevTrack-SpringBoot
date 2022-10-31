@@ -64,7 +64,14 @@ public class Account implements Serializable {
      */
     private LocalDateTime lastLoginTime;
 
-    public Account() { }
+    public Account() {
+    }
 
-    public Account(LocalDateTime lastLoginTime) { this.lastLoginTime = lastLoginTime; }
+    public Account(LocalDateTime lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public Account(Blob blob) {
+        this.avatar = blob;
+    }
 }
