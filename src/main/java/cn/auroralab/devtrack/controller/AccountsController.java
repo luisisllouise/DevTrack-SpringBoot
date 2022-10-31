@@ -6,10 +6,7 @@ import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.service.AccountService;
-import cn.auroralab.devtrack.vo.EditProfileResultVO;
-import cn.auroralab.devtrack.vo.ResultVO;
-import cn.auroralab.devtrack.vo.SignInResultVO;
-import cn.auroralab.devtrack.vo.SignUpResultVO;
+import cn.auroralab.devtrack.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +39,7 @@ public class AccountsController {
     }
 
     @GetMapping("/avatar")
-    public ResultVO avatar(AvatarForm form){
+    public AvatarResultVO avatar(AvatarForm form){
         return accountService.avatar(form);
     }
 }

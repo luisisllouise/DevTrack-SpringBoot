@@ -145,21 +145,21 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @param form
      * @return
      */
-    public ResultVO avatar(AvatarForm form) {
+    public AvatarResultVO avatar(AvatarForm form) {
         Blob blob = null;
         MultipartFile file = form.getFile();
         String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));//判断所传文件是否是图片文件，检查后缀名
         if (!(type.equals("png") || type.equals("jpeg") || type.equals("jpg")))
-            return new ResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR);
+            return new AvatarResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR);
         try {
             blob = new SerialBlob(file.getBytes());
         } catch (Exception e) {
-            return new ResultVO(StatusCodeEnum.UNKNOWN_ERROR);//转换二进制错误，此处暂判为未知错误
+            return new AvatarResultVO(StatusCodeEnum.UNKNOWN_ERROR);//转换二进制错误，此处暂判为未知错误
         }
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", form.getUsername());//查询到信息数据
         accountMapper.update(new Account(blob), queryWrapper);//将头像更新至数据库
-        return new ResultVO(StatusCodeEnum.SUCCESS);
+        return new AvatarResultVO(StatusCodeEnum.SUCCESS);
     }
 
 }
