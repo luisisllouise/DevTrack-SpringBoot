@@ -8,6 +8,7 @@ import cn.auroralab.devtrack.form.AvatarForm;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
+import cn.auroralab.devtrack.form.result.SignInResultData;
 import cn.auroralab.devtrack.mapper.AccountMapper;
 import cn.auroralab.devtrack.mapper.VCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
@@ -20,16 +21,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.sql.Blob;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -106,9 +100,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         LocalDateTime signInTime = LocalDateTime.now();
         accountMapper.update(new Account(signInTime), queryWrapper);
-        account.setLastLoginTime(signInTime);
+        account.setLastSignInTime(signInTime);
 
-        return new SignInResultVO(StatusCodeEnum.SUCCESS, account);
+        return new SignInResultVO(StatusCodeEnum.SUCCESS, new SignInResultData(account));
     }
 
     /**
