@@ -24,12 +24,12 @@ public class ProjectRole implements Serializable {
      * 角色uuid
      */
     @TableId(value = "role_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
 
     /**
      * 角色所属项目的uuid
      */
-    private byte[] projectUuid;
+    private String projectUuid;
 
     /**
      * 角色的数字id

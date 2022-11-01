@@ -3,7 +3,6 @@ package cn.auroralab.devtrack.controller;
 import cn.auroralab.devtrack.form.VerificationCodeForm;
 import cn.auroralab.devtrack.service.EmailService;
 import cn.auroralab.devtrack.service.VerificationCodeRecordService;
-import cn.auroralab.devtrack.util.ConvertTool;
 import cn.auroralab.devtrack.util.ResourceFileLoader;
 import cn.auroralab.devtrack.vo.SendVCodeEmailResultVO;
 import cn.auroralab.devtrack.vo.StatusCodeEnum;
@@ -38,7 +37,7 @@ public class EmailTaskController {
 
         String subject = "AuroraLab Verification Code";
         String text = ResourceFileLoader.readFile("EmailTemplates/VCodeEmailTemplate.html")
-                .replace("{{$vcode}}", vCodeResultVO.getResultData().getvCode())
+                .replace("{{$vcode}}", vCodeResultVO.getResultData().getVCode())
                 .replace("{{$time}}", invalidTimeString)
                 .replace("{{$email}}", form.getEmail());
 
@@ -47,6 +46,6 @@ public class EmailTaskController {
         emailService.addImage("logo", "logo.png");
         emailService.sendEmail(form.getEmail(), subject);
 
-        return new SendVCodeEmailResultVO(StatusCodeEnum.SUCCESS, ConvertTool.bytesToHexString(vCodeResultVO.getResultData().getUuid()));
+        return new SendVCodeEmailResultVO(StatusCodeEnum.SUCCESS, vCodeResultVO.getResultData().getUuid());
     }
 }

@@ -25,7 +25,7 @@ public class Project implements Serializable {
      * 项目uuid
      */
     @TableId(value = "project_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
 
     /**
      * 项目的数字id
@@ -35,12 +35,12 @@ public class Project implements Serializable {
     /**
      * 创建人uuid
      */
-    private byte[] creatorUuid;
+    private String creatorUuid;
 
     /**
      * 负责人uuid
      */
-    private byte[] principalUuid;
+    private String principalUuid;
 
     /**
      * 任务编号前缀

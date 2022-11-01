@@ -25,12 +25,12 @@ public class ProjectTask implements Serializable {
      * 任务uuid
      */
     @TableId(value = "task_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
 
     /**
      * 任务所属的项目uuid
      */
-    private byte[] projectUuid;
+    private String projectUuid;
 
     /**
      * 任务在项目中的id
@@ -50,12 +50,12 @@ public class ProjectTask implements Serializable {
     /**
      * 创建人uuid
      */
-    private byte[] creatorUuid;
+    private String creatorUuid;
 
     /**
      * 负责人uuid
      */
-    private byte[] principalUuid;
+    private String principalUuid;
 
     /**
      * 优先级

@@ -3,7 +3,7 @@ package cn.auroralab.devtrack.util;
 import java.util.UUID;
 
 public class UUIDGenerator {
-    public static byte[] getUUID() {
-        return ConvertTool.hexStringToBytes(UUID.randomUUID().toString().replaceAll("-", ""));
+    public static String getUUID() {
+        return UUID.randomUUID().toString().trim().replaceAll("-", "");
     }
 }

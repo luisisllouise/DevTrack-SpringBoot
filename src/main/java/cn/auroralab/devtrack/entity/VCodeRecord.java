@@ -27,7 +27,7 @@ public class VCodeRecord implements Serializable {
      * 验证码业务uuid
      */
     @TableId(value = "task_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
     /**
      * 业务时间
      */

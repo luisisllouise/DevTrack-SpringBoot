@@ -26,7 +26,7 @@ public class Account implements Serializable {
      * 用户uuid
      */
     @TableId(value = "user_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
     /**
      * 用户名
      */

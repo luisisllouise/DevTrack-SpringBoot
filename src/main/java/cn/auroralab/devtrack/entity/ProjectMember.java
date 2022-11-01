@@ -24,17 +24,17 @@ public class ProjectMember implements Serializable {
      * 映射记录uuid
      */
     @TableId(value = "record_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
 
     /**
      * 项目uuid
      */
-    private byte[] projectUuid;
+    private String projectUuid;
 
     /**
      * 用户uuid
      */
-    private byte[] userUuid;
+    private String userUuid;
 
     /**
      * 用户在项目中的昵称
@@ -44,5 +44,5 @@ public class ProjectMember implements Serializable {
     /**
      * 用户在项目中扮演的角色
      */
-    private byte[] roleUuid;
+    private String roleUuid;
 }

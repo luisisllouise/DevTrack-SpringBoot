@@ -60,7 +60,7 @@ public class VCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMa
         vCodeRecord.setTime(generator.getStartTime());
         vCodeRecord.setType(form.getTaskType());
         vCodeRecord.setEmail(form.getEmail());
-        vCodeRecord.setvCode(generator.getVerificationCode());
+        vCodeRecord.setVCode(generator.getVerificationCode());
         vCodeRecord.setValidTime(generator.getValidTime());
 
         verificationCodeRecordMapper.insert(vCodeRecord);

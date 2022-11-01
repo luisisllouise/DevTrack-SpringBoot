@@ -52,7 +52,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         if (vCodeRecord == null)
             return new SignUpResultVO(StatusCodeEnum.VCODE_NO_RECORD);
-        if (!Objects.equals(vCodeRecord.getvCode(), form.getVerificationCode()))
+        if (!Objects.equals(vCodeRecord.getVCode(), form.getVerificationCode()))
             return new SignUpResultVO(StatusCodeEnum.VCODE_ERROR);
         if (!vCodeRecord.isValid(LocalDateTime.now()))
             return new SignUpResultVO(StatusCodeEnum.VCODE_INVALID);
@@ -124,7 +124,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         VCodeRecord vCodeRecord = verificationCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
         if (vCodeRecord == null) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//获取验证码失败
         boolean sameEmail = vCodeRecord.getEmail().equals(editProfileForm.getEmail());//判断邮箱
-        boolean sameVerificationCode = vCodeRecord.getvCode().equals(editProfileForm.getVerificationCode());//判断验证码
+        boolean sameVerificationCode = vCodeRecord.getVCode().equals(editProfileForm.getVerificationCode());//判断验证码
         if (!sameEmail) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//验证码发送错误，发送至错误邮箱
         if (!sameVerificationCode) return new EditProfileResultVO(StatusCodeEnum.VCODE_ERROR);//验证码错误
         if (!vCodeRecord.isValid(LocalDateTime.now())) return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
