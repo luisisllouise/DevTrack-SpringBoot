@@ -3,8 +3,9 @@ package cn.auroralab.devtrack.entity;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
-import cn.auroralab.devtrack.util.VerificationCodeGenerator;
+import cn.auroralab.devtrack.util.VCodeGenerator;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -18,23 +19,25 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("verification_code_records")
-public class VerificationCodeRecord implements Serializable {
+@TableName("vcode_records")
+public class VCodeRecord implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * 验证码业务uuid
      */
     @TableId(value = "task_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
     /**
      * 业务时间
      */
-    private LocalDateTime taskTime;
+    @TableField(value = "task_time")
+    private LocalDateTime time;
     /**
      * 验证码业务类型
      */
-    private int taskType;
+    @TableField(value = "task_type")
+    private int type;
     /**
      * 接收验证码的邮箱
      */
@@ -42,11 +45,12 @@ public class VerificationCodeRecord implements Serializable {
     /**
      * 验证码
      */
-    private String verificationCode;
+    @TableField(value = "vcode")
+    private String vCode;
     /**
      * 验证码有效时间，单位：分钟
      */
     private int validTime;
 
-    public boolean isValid(LocalDateTime currentTime) { return VerificationCodeGenerator.isValid(taskTime, currentTime, validTime); }
+    public boolean isValid(LocalDateTime currentTime) { return VCodeGenerator.isValid(time, currentTime, validTime); }
 }

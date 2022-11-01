@@ -2,13 +2,13 @@ package cn.auroralab.devtrack.service.impl;
 
 import cn.auroralab.devtrack.entity.Account;
 import cn.auroralab.devtrack.entity.TaskTypeEnum;
-import cn.auroralab.devtrack.entity.VerificationCodeRecord;
+import cn.auroralab.devtrack.entity.VCodeRecord;
 import cn.auroralab.devtrack.environment.Environment;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.mapper.AccountMapper;
-import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
+import cn.auroralab.devtrack.mapper.VCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.util.ConvertTool;
 import cn.auroralab.devtrack.util.MD5Generator;
@@ -39,22 +39,22 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Autowired
     private AccountMapper accountMapper;
     @Autowired
-    private VerificationCodeRecordMapper verificationCodeRecordMapper;
+    private VCodeRecordMapper vCodeRecordMapper;
 
     public SignUpResultVO signUp(SignUpForm form) {
-        QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<VCodeRecord> queryWrapper = new QueryWrapper<>();
         queryWrapper
                 .eq("task_type", TaskTypeEnum.SIGN_UP.code)
                 .eq("email", form.getEmail())
                 .orderByDesc("task_time")
                 .last("limit 1");
-        VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(queryWrapper);
+        VCodeRecord vCodeRecord = vCodeRecordMapper.selectOne(queryWrapper);
 
-        if (verificationCodeRecord == null)
+        if (vCodeRecord == null)
             return new SignUpResultVO(StatusCodeEnum.VCODE_NO_RECORD);
-        if (!Objects.equals(verificationCodeRecord.getVerificationCode(), form.getVerificationCode()))
+        if (!Objects.equals(vCodeRecord.getVCode(), form.getVerificationCode()))
             return new SignUpResultVO(StatusCodeEnum.VCODE_ERROR);
-        if (!verificationCodeRecord.isValid(LocalDateTime.now()))
+        if (!vCodeRecord.isValid(LocalDateTime.now()))
             return new SignUpResultVO(StatusCodeEnum.VCODE_INVALID);
 
         QueryWrapper<Account> accountQueryWrapper = new QueryWrapper<>();
@@ -72,7 +72,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
         account.setUsername(form.getUsername());
-        account.setPasswordDigest(MD5Generator.getMD5(form.getPassword()));
+        account.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getPassword())));
         account.setEmail(form.getEmail());
         account.setPhone(form.getPhone());
 
@@ -94,7 +94,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         if (account == null)
             return new SignInResultVO(StatusCodeEnum.USER_NOT_EXISTS);
-        if (!Arrays.equals(account.getPasswordDigest(), MD5Generator.getMD5(form.getPassword())))
+        if (!account.getPasswordDigest().equals(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getPassword()))))
             return new SignInResultVO(StatusCodeEnum.USER_PASSWORD_ERROR);
 
         LocalDateTime signInTime = LocalDateTime.now();
@@ -116,23 +116,23 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         queryWrapper.eq("username", editProfileForm.getUsername());//查询到信息数据
         Account account = this.accountMapper.selectOne(queryWrapper);
         if (account == null) return new EditProfileResultVO(StatusCodeEnum.USER_NOT_EXISTS);
-        if (!Arrays.equals(account.getPasswordDigest(), MD5Generator.getMD5(editProfileForm.getOld_password())))
+        if (account.getPasswordDigest().equals(ConvertTool.bytesToHexString(MD5Generator.getMD5(editProfileForm.getOld_password()))))
             return new EditProfileResultVO(StatusCodeEnum.USER_PASSWORD_ERROR);//密码验证错误
         /*   验证码校验    */
-        QueryWrapper<VerificationCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<VCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
         verificationCodeRecordQueryWrapper.eq("task_uuid", ConvertTool.hexStringToBytes(editProfileForm.getVerificationCodeRecordUUID()));
-        VerificationCodeRecord verificationCodeRecord = verificationCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
-        if (verificationCodeRecord == null) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//获取验证码失败
-        boolean sameEmail = verificationCodeRecord.getEmail().equals(editProfileForm.getEmail());//判断邮箱
-        boolean sameVerificationCode = verificationCodeRecord.getVerificationCode().equals(editProfileForm.getVerificationCode());//判断验证码
+        VCodeRecord vCodeRecord = vCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
+        if (vCodeRecord == null) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//获取验证码失败
+        boolean sameEmail = vCodeRecord.getEmail().equals(editProfileForm.getEmail());//判断邮箱
+        boolean sameVerificationCode = vCodeRecord.getVCode().equals(editProfileForm.getVerificationCode());//判断验证码
         if (!sameEmail) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//验证码发送错误，发送至错误邮箱
         if (!sameVerificationCode) return new EditProfileResultVO(StatusCodeEnum.VCODE_ERROR);//验证码错误
-        if (!verificationCodeRecord.isValid(LocalDateTime.now())) return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
+        if (!vCodeRecord.isValid(LocalDateTime.now())) return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
         // 均成功
         Account target = new Account();
         target.setNickname(editProfileForm.getNickname());
         target.setEmail(editProfileForm.getEmail());
-        target.setPasswordDigest(MD5Generator.getMD5(editProfileForm.getNew_password()));
+        target.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(editProfileForm.getNew_password())));
         target.setPhone(editProfileForm.getPhone());
         accountMapper.update(target, queryWrapper);
         return new EditProfileResultVO(StatusCodeEnum.SUCCESS);
