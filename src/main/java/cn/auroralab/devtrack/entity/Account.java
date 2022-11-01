@@ -26,7 +26,7 @@ public class Account implements Serializable {
      * 用户uuid
      */
     @TableId(value = "user_uuid", type = IdType.INPUT)
-    private byte[] uuid;
+    private String uuid;
     /**
      * 用户名
      */
@@ -34,7 +34,7 @@ public class Account implements Serializable {
     /**
      * 密码的MD5值
      */
-    private byte[] passwordDigest;
+    private String passwordDigest;
     /**
      * 头像，使用二进制保存
      */

@@ -11,7 +11,6 @@ import java.util.Optional;
  */
 public enum StatusCodeEnum {
     UNKNOWN_ERROR(0),           // 未知错误
-
     SUCCESS(100),               // 成功
 
     // 用户业务
@@ -24,11 +23,13 @@ public enum StatusCodeEnum {
     VCODE_ERROR(301),           // 验证码错误
     VCODE_INVALID(302),         // 验证码失效（由于超时）
     VCODE_NO_RECORD(303),       // 没有验证码记录（无效的验证码业务uuid）
+    VCODE_RESEND(304),          // 重新发送的验证码（验证码在有效期内将不会重新生成）
 
     // 后台业务
     UUID_CONFLICT(901),         // 生成uuid时发生碰撞
 
     ;
+
     public final int code;
 
     StatusCodeEnum(int code) { this.code = code; }
