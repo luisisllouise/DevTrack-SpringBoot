@@ -1,6 +1,5 @@
 package cn.auroralab.devtrack.controller;
 
-import cn.auroralab.devtrack.entity.Account;
 import cn.auroralab.devtrack.form.AvatarForm;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
@@ -34,8 +33,8 @@ public class AccountsController {
     }
 
     @GetMapping("/editprofile")
-    public EditProfileResultVO editprofile(EditProfileForm editProfileForm){
-        return accountService.editprofile(editProfileForm);
+    public EditProfileResultVO editProfile(EditProfileForm editProfileForm){
+        return accountService.editProfile(editProfileForm);
     }
 
     @GetMapping("/avatar")

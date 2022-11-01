@@ -7,7 +7,6 @@ import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.vo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户账号信息 服务类
@@ -18,6 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AccountService extends IService<Account> {
     SignUpResultVO signUp(SignUpForm form);
     SignInResultVO login(SignInForm signInForm);
-    EditProfileResultVO editprofile(EditProfileForm editProfileForm);
+    EditProfileResultVO editProfile(EditProfileForm editProfileForm);
     AvatarResultVO avatar(AvatarForm form);
 }
