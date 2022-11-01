@@ -4,6 +4,7 @@ import cn.auroralab.devtrack.entity.Account;
 import cn.auroralab.devtrack.entity.TaskTypeEnum;
 import cn.auroralab.devtrack.entity.VCodeRecord;
 import cn.auroralab.devtrack.environment.Environment;
+import cn.auroralab.devtrack.form.AvatarForm;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
@@ -74,7 +75,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             createUUIDCount++;
             accountQueryWrapper.eq("user_uuid", account.getUuid());
             if (accountMapper.selectOne(accountQueryWrapper) == null) break;
-            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
+            else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID)
+                return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
         account.setUsername(form.getUsername());
         account.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getPassword())));
@@ -132,7 +134,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         boolean sameVerificationCode = vCodeRecord.getVCode().equals(editProfileForm.getVerificationCode());//判断验证码
         if (!sameEmail) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//验证码发送错误，发送至错误邮箱
         if (!sameVerificationCode) return new EditProfileResultVO(StatusCodeEnum.VCODE_ERROR);//验证码错误
-        if (!vCodeRecord.isValid(LocalDateTime.now())) return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
+        if (!vCodeRecord.isValid(LocalDateTime.now()))
+            return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
         // 均成功
         Account target = new Account();
         target.setNickname(editProfileForm.getNickname());
@@ -151,9 +154,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      */
     public AvatarResultVO avatar(AvatarForm form) {
         Blob blob = null;
-        String type = form.getFile().getOriginalFilename().substring(form.getFile().getOriginalFilename().lastIndexOf("."));
-        if (!(type.equals("png") || type.equals("jpeg") || type.equals("jpg")))
-            return new AvatarResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR);
+        String type = form.getFile().getOriginalFilename().substring(form.getFile().getOriginalFilename().lastIndexOf(".") + 1);
+        if (!type.equals("png") & !type.equals("jpeg") & !type.equals("jpg"))
+            return new AvatarResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR, type);
         try {
             blob = new SerialBlob(form.getFile().getBytes());
         } catch (Exception e) {
@@ -161,9 +164,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", form.getUsername());//查询到信息数据
-        Account account=accountMapper.selectOne(queryWrapper);
-        if (account==null) return new AvatarResultVO(StatusCodeEnum.USER_NOT_EXISTS);
+        Account account = accountMapper.selectOne(queryWrapper);
+        if (account == null) return new AvatarResultVO(StatusCodeEnum.USER_NOT_EXISTS);
         accountMapper.update(new Account(blob), queryWrapper);//将头像更新至数据库
-        return new AvatarResultVO(StatusCodeEnum.SUCCESS);
+        return new AvatarResultVO(StatusCodeEnum.SUCCESS, type);
     }
 }
