@@ -52,7 +52,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         if (vCodeRecord == null)
             return new SignUpResultVO(StatusCodeEnum.VCODE_NO_RECORD);
-        if (!Objects.equals(vCodeRecord.getVCode(), form.getVerificationCode()))
+        if (!Objects.equals(vCodeRecord.getVCode(), form.getVCode()))
             return new SignUpResultVO(StatusCodeEnum.VCODE_ERROR);
         if (!vCodeRecord.isValid(LocalDateTime.now()))
             return new SignUpResultVO(StatusCodeEnum.VCODE_INVALID);
@@ -74,7 +74,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         account.setUsername(form.getUsername());
         account.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getPassword())));
         account.setEmail(form.getEmail());
-        account.setPhone(form.getPhone());
+        account.setNickname(form.getUsername());
 
         accountMapper.insert(account);
         return new SignUpResultVO(StatusCodeEnum.SUCCESS);
