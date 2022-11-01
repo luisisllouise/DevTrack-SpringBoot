@@ -14,6 +14,7 @@ import cn.auroralab.devtrack.mapper.VCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.util.ConvertTool;
 import cn.auroralab.devtrack.util.MD5Generator;
+import cn.auroralab.devtrack.util.ResourceFileLoader;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -73,10 +74,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID)
                 return new SignUpResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
+
         account.setUsername(form.getUsername());
         account.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getPassword())));
-        account.setEmail(form.getEmail());
+        account.setAvatar(ResourceFileLoader.imageToBytes("default_avatar.png"));
         account.setNickname(form.getUsername());
+        account.setEmail(form.getEmail());
 
         accountMapper.insert(account);
         return new SignUpResultVO(StatusCodeEnum.SUCCESS);
