@@ -1,8 +1,8 @@
 package cn.auroralab.devtrack.controller;
 
-import cn.auroralab.devtrack.form.VerificationCodeForm;
+import cn.auroralab.devtrack.form.VCodeForm;
 import cn.auroralab.devtrack.service.EmailService;
-import cn.auroralab.devtrack.service.VerificationCodeRecordService;
+import cn.auroralab.devtrack.service.VCodeRecordService;
 import cn.auroralab.devtrack.util.ResourceFileLoader;
 import cn.auroralab.devtrack.vo.SendVCodeEmailResultVO;
 import cn.auroralab.devtrack.vo.StatusCodeEnum;
@@ -21,13 +21,13 @@ public class EmailTaskController {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private VerificationCodeRecordService verificationCodeRecordService;
+    private VCodeRecordService vCodeRecordService;
     @Autowired
     private ResourceLoader resourceLoader;
 
     @GetMapping("/send-verification-code")
-    public SendVCodeEmailResultVO sendVerificationCodeEmail(VerificationCodeForm form) {
-        VCodeResultVO vCodeResultVO = verificationCodeRecordService.signUpVerificationCode(form);
+    public SendVCodeEmailResultVO sendVerificationCodeEmail(VCodeForm form) {
+        VCodeResultVO vCodeResultVO = vCodeRecordService.signUpVerificationCode(form);
         if (vCodeResultVO.getStatusCode() != StatusCodeEnum.SUCCESS.code)
             return new SendVCodeEmailResultVO(StatusCodeEnum.parse(vCodeResultVO.getStatusCode()));
 

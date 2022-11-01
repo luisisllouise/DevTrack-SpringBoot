@@ -3,7 +3,7 @@ package cn.auroralab.devtrack.entity;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
-import cn.auroralab.devtrack.util.VerificationCodeGenerator;
+import cn.auroralab.devtrack.util.VCodeGenerator;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -52,5 +52,5 @@ public class VCodeRecord implements Serializable {
      */
     private int validTime;
 
-    public boolean isValid(LocalDateTime currentTime) { return VerificationCodeGenerator.isValid(time, currentTime, validTime); }
+    public boolean isValid(LocalDateTime currentTime) { return VCodeGenerator.isValid(time, currentTime, validTime); }
 }

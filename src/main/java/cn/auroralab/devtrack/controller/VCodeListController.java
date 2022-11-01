@@ -11,4 +11,4 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("//verificationCodeList")
-public class VerificationCodeListController { }
+public class VCodeListController { }

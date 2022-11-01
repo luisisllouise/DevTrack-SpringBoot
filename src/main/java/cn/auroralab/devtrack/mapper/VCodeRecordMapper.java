@@ -11,4 +11,4 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-10-16
  */
 @Mapper
-public interface VerificationCodeRecordMapper extends BaseMapper<VCodeRecord> { }
+public interface VCodeRecordMapper extends BaseMapper<VCodeRecord> { }
