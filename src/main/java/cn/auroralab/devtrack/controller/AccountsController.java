@@ -27,18 +27,11 @@ public class AccountsController {
     public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
 
     @GetMapping("/signIn")
-    public SignInResultVO login(SignInForm signInForm) {
-        SignInResultVO login_result = accountService.login(signInForm);
-        return login_result;
-    }
+    public SignInResultVO login(SignInForm signInForm) { return accountService.login(signInForm); }
 
     @GetMapping("/editprofile")
-    public EditProfileResultVO editProfile(EditProfileForm editProfileForm){
-        return accountService.editProfile(editProfileForm);
-    }
+    public EditProfileResultVO editProfile(EditProfileForm editProfileForm) { return accountService.editProfile(editProfileForm); }
 
-    @GetMapping("/avatar")
-    public AvatarResultVO avatar(AvatarForm form){
-        return accountService.avatar(form);
-    }
+    @GetMapping("/updateAvatar")
+    public AvatarResultVO updateAvatar(AvatarForm form) { return accountService.updateAvatar(form); }
 }

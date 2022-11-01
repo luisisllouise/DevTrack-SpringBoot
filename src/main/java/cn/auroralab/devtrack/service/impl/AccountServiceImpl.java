@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
 import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -145,22 +146,28 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      *
      * @param
      * @return
+     * @author XiaoTong Wu
+     * @since 2022-11-01
      */
-    public AvatarResultVO avatar(AvatarForm form) {
-        Blob blob = null;
+    public AvatarResultVO updateAvatar(AvatarForm form) {
         String type = form.getFile().getOriginalFilename().substring(form.getFile().getOriginalFilename().lastIndexOf(".") + 1);
+
         if (!type.equals("png") & !type.equals("jpeg") & !type.equals("jpg"))
             return new AvatarResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR, type);
-        try {
-            blob = new SerialBlob(form.getFile().getBytes());
-        } catch (Exception e) {
-            return new AvatarResultVO(StatusCodeEnum.UNKNOWN_ERROR);//转换二进制错误，此处暂判为未知错误
-        }
+
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", form.getUsername());//查询到信息数据
+        queryWrapper.eq("username", form.getUsername());// 查询到信息数据
         Account account = accountMapper.selectOne(queryWrapper);
-        if (account == null) return new AvatarResultVO(StatusCodeEnum.USER_NOT_EXISTS);
-        accountMapper.update(new Account(blob), queryWrapper);//将头像更新至数据库
+
+        if (account == null)
+            return new AvatarResultVO(StatusCodeEnum.USER_NOT_EXISTS);
+
+        try {
+            accountMapper.update(new Account(form.getFile().getBytes()), queryWrapper);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //将头像更新至数据库
         return new AvatarResultVO(StatusCodeEnum.SUCCESS, type);
     }
 }

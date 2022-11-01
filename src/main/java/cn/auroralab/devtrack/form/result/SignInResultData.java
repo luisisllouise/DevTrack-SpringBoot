@@ -10,14 +10,12 @@ import java.time.LocalDateTime;
 public class SignInResultData {
     private String uuid;
     private String username;
-    private Blob avatar;
+    private byte[] avatar;
     private String nickname;
     private String email;
     private String phone;
     private LocalDateTime registrationTime;
     private LocalDateTime lastSignInTime;
-
-    public SignInResultData() { }
 
     public SignInResultData(Account account) {
         uuid = account.getUuid();

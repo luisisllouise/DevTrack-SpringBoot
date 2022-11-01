@@ -43,7 +43,7 @@ public class Account implements Serializable {
     /**
      * 头像，使用二进制保存
      */
-    private Blob avatar;
+    private byte[] avatar;
     /**
      * 昵称
      */
@@ -70,22 +70,11 @@ public class Account implements Serializable {
     @TableField(value = "last_login_time")
     private LocalDateTime lastSignInTime;
 
-    public Account() {
-    }
+    public Account() { }
 
     public Account(LocalDateTime lastSignInTime) {
         this.lastSignInTime = lastSignInTime;
     }
 
-    public Account(Blob blob) {
-        this.avatar = blob;
-    }
-
-    public void setAvatar(byte[] bytes) {
-        try {
-            avatar = new SerialBlob(bytes);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public Account(byte[] avatar) { this.avatar = avatar; }
 }

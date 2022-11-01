@@ -18,5 +18,5 @@ public interface AccountService extends IService<Account> {
     SignUpResultVO signUp(SignUpForm form);
     SignInResultVO login(SignInForm signInForm);
     EditProfileResultVO editProfile(EditProfileForm editProfileForm);
-    AvatarResultVO avatar(AvatarForm form);
+    AvatarResultVO updateAvatar(AvatarForm form);
 }
