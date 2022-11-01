@@ -13,15 +13,20 @@ import cn.auroralab.devtrack.service.AccountService;
 import cn.auroralab.devtrack.util.ConvertTool;
 import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.UUIDGenerator;
-import cn.auroralab.devtrack.vo.EditProfileResultVO;
-import cn.auroralab.devtrack.vo.SignInResultVO;
-import cn.auroralab.devtrack.vo.SignUpResultVO;
-import cn.auroralab.devtrack.vo.StatusCodeEnum;
+import cn.auroralab.devtrack.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import javax.sql.rowset.serial.SerialBlob;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
@@ -110,7 +115,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @param editProfileForm
      * @return
      */
-    public EditProfileResultVO editprofile(EditProfileForm editProfileForm) {//Nickname，phone合法性在前端检查
+    public EditProfileResultVO editProfile(EditProfileForm editProfileForm) {//Nickname，phone合法性在前端检查
         /*    密码校验     */
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", editProfileForm.getUsername());//查询到信息数据
@@ -136,5 +141,29 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         target.setPhone(editProfileForm.getPhone());
         accountMapper.update(target, queryWrapper);
         return new EditProfileResultVO(StatusCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 用户个人头像更改
+     *
+     * @param
+     * @return
+     */
+    public AvatarResultVO avatar(AvatarForm form) {
+        Blob blob = null;
+        String type = form.getFile().getOriginalFilename().substring(form.getFile().getOriginalFilename().lastIndexOf("."));
+        if (!(type.equals("png") || type.equals("jpeg") || type.equals("jpg")))
+            return new AvatarResultVO(StatusCodeEnum.USER_AVATAR_FILETYPE_ERROR);
+        try {
+            blob = new SerialBlob(form.getFile().getBytes());
+        } catch (Exception e) {
+            return new AvatarResultVO(StatusCodeEnum.UNKNOWN_ERROR);//转换二进制错误，此处暂判为未知错误
+        }
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", form.getUsername());//查询到信息数据
+        Account account=accountMapper.selectOne(queryWrapper);
+        if (account==null) return new AvatarResultVO(StatusCodeEnum.USER_NOT_EXISTS);
+        accountMapper.update(new Account(blob), queryWrapper);//将头像更新至数据库
+        return new AvatarResultVO(StatusCodeEnum.SUCCESS);
     }
 }
