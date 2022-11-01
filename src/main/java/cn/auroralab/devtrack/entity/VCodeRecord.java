@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import cn.auroralab.devtrack.util.VerificationCodeGenerator;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,11 +31,13 @@ public class VCodeRecord implements Serializable {
     /**
      * 业务时间
      */
-    private LocalDateTime taskTime;
+    @TableField(value = "task_time")
+    private LocalDateTime time;
     /**
      * 验证码业务类型
      */
-    private int taskType;
+    @TableField(value = "task_type")
+    private int type;
     /**
      * 接收验证码的邮箱
      */
@@ -42,11 +45,12 @@ public class VCodeRecord implements Serializable {
     /**
      * 验证码
      */
-    private String verificationCode;
+    @TableField(value = "vcode")
+    private String vCode;
     /**
      * 验证码有效时间，单位：分钟
      */
     private int validTime;
 
-    public boolean isValid(LocalDateTime currentTime) { return VerificationCodeGenerator.isValid(taskTime, currentTime, validTime); }
+    public boolean isValid(LocalDateTime currentTime) { return VerificationCodeGenerator.isValid(time, currentTime, validTime); }
 }

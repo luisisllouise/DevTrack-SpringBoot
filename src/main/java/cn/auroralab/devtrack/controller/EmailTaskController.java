@@ -32,13 +32,13 @@ public class EmailTaskController {
         if (vCodeResultVO.getStatusCode() != StatusCodeEnum.SUCCESS.code)
             return new SendVCodeEmailResultVO(StatusCodeEnum.parse(vCodeResultVO.getStatusCode()));
 
-        LocalDateTime invalidTime = vCodeResultVO.getResultData().getTaskTime().plusMinutes(vCodeResultVO.getResultData().getValidTime());
+        LocalDateTime invalidTime = vCodeResultVO.getResultData().getTime().plusMinutes(vCodeResultVO.getResultData().getValidTime());
         String invalidTimeString = invalidTime.getYear() + "-" + invalidTime.getMonthValue() + "-" + invalidTime.getDayOfMonth() + " " +
                 invalidTime.getHour() + ":" + invalidTime.getMinute() + ":" + invalidTime.getSecond();
 
         String subject = "AuroraLab Verification Code";
         String text = ResourceFileLoader.readFile("EmailTemplates/VCodeEmailTemplate.html")
-                .replace("{{$vcode}}", vCodeResultVO.getResultData().getVerificationCode())
+                .replace("{{$vcode}}", vCodeResultVO.getResultData().getvCode())
                 .replace("{{$time}}", invalidTimeString)
                 .replace("{{$email}}", form.getEmail());
 

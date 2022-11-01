@@ -57,10 +57,10 @@ public class VCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMa
                 return new VCodeResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
 
-        vCodeRecord.setTaskTime(generator.getStartTime());
-        vCodeRecord.setTaskType(form.getTaskType());
+        vCodeRecord.setTime(generator.getStartTime());
+        vCodeRecord.setType(form.getTaskType());
         vCodeRecord.setEmail(form.getEmail());
-        vCodeRecord.setVerificationCode(generator.getVerificationCode());
+        vCodeRecord.setvCode(generator.getVerificationCode());
         vCodeRecord.setValidTime(generator.getValidTime());
 
         verificationCodeRecordMapper.insert(vCodeRecord);
