@@ -18,8 +18,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("verification_code_records")
-public class VerificationCodeRecord implements Serializable {
+@TableName("vcode_records")
+public class VCodeRecord implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

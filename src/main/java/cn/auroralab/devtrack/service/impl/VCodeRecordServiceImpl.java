@@ -1,7 +1,7 @@
 package cn.auroralab.devtrack.service.impl;
 
 import cn.auroralab.devtrack.entity.TaskTypeEnum;
-import cn.auroralab.devtrack.entity.VerificationCodeRecord;
+import cn.auroralab.devtrack.entity.VCodeRecord;
 import cn.auroralab.devtrack.environment.Environment;
 import cn.auroralab.devtrack.form.VerificationCodeForm;
 import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
@@ -26,14 +26,14 @@ import java.time.LocalDateTime;
  * @since 2022-10-16
  */
 @Service
-public class VCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMapper, VerificationCodeRecord> implements VerificationCodeRecordService {
+public class VCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMapper, VCodeRecord> implements VerificationCodeRecordService {
     @Autowired
     private VerificationCodeRecordMapper verificationCodeRecordMapper;
 
     public VCodeResultVO signUpVerificationCode(VerificationCodeForm form) {
         VerificationCodeGenerator generator = new VerificationCodeGenerator();
 
-        QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<VCodeRecord> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("task_type", TaskTypeEnum.SIGN_UP.code)
                 .eq("email", form.getEmail())
                 .ge("task_time", LocalDateTime.now().minusMinutes(generator.getValidTime()))
@@ -44,7 +44,7 @@ public class VCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMa
         if (oldRecord != null)
             return new VCodeResultVO(StatusCodeEnum.VCODE_RESEND, oldRecord);
 
-        VerificationCodeRecord vCodeRecord = new VerificationCodeRecord();
+        VCodeRecord vCodeRecord = new VCodeRecord();
 
         int createUUIDCount = 0;
         while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {

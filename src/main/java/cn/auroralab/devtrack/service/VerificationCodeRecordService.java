@@ -1,6 +1,6 @@
 package cn.auroralab.devtrack.service;
 
-import cn.auroralab.devtrack.entity.VerificationCodeRecord;
+import cn.auroralab.devtrack.entity.VCodeRecord;
 import cn.auroralab.devtrack.form.VerificationCodeForm;
 import cn.auroralab.devtrack.vo.VCodeResultVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author Guanyu Hu
  * @since 2022-10-16
  */
-public interface VerificationCodeRecordService extends IService<VerificationCodeRecord> {
+public interface VerificationCodeRecordService extends IService<VCodeRecord> {
     VCodeResultVO signUpVerificationCode(VerificationCodeForm form);
 }
