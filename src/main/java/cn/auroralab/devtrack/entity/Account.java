@@ -34,7 +34,7 @@ public class Account implements Serializable {
     /**
      * 密码的MD5值
      */
-    private byte[] passwordDigest;
+    private String passwordDigest;
     /**
      * 头像，使用二进制保存
      */

@@ -3,6 +3,7 @@ package cn.auroralab.devtrack.entity;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -26,15 +27,13 @@ public class ProjectMember implements Serializable {
     @TableId(value = "record_uuid", type = IdType.INPUT)
     private String uuid;
 
-    /**
-     * 项目uuid
-     */
-    private String projectUuid;
+    private String fromProject;
 
     /**
      * 用户uuid
      */
-    private String userUuid;
+    @TableField(value = "user_uuid")
+    private String user;
 
     /**
      * 用户在项目中的昵称
@@ -44,5 +43,5 @@ public class ProjectMember implements Serializable {
     /**
      * 用户在项目中扮演的角色
      */
-    private String roleUuid;
+    private String role;
 }

@@ -3,6 +3,7 @@ package cn.auroralab.devtrack.entity;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -29,17 +30,19 @@ public class ProjectRole implements Serializable {
     /**
      * 角色所属项目的uuid
      */
-    private String projectUuid;
+    private String fromProject;
 
     /**
      * 角色的数字id
      */
-    private Integer roleId;
+    @TableField(value = "role_id")
+    private Integer id;
 
     /**
      * 角色名
      */
-    private String roleName;
+    @TableField(value = "role_name")
+    private String name;
 
     /**
      * 邀请权限

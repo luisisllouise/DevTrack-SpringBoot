@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,32 +31,37 @@ public class ProjectTask implements Serializable {
     /**
      * 任务所属的项目uuid
      */
-    private String projectUuid;
+    private String fromProject;
 
     /**
      * 任务在项目中的id
      */
-    private Integer taskId;
+    @TableField(value = "task_id")
+    private Integer id;
 
     /**
      * 任务类型
      */
-    private Integer taskType;
+    @TableField(value = "task_type")
+    private Integer type;
 
     /**
      * 任务标题
      */
-    private String taskTitle;
+    @TableField(value = "task_title")
+    private String title;
 
     /**
      * 创建人uuid
      */
-    private String creatorUuid;
+    @TableField(value = "creator_uuid")
+    private String creator;
 
     /**
      * 负责人uuid
      */
-    private String principalUuid;
+    @TableField(value = "principal_uuid")
+    private String principal;
 
     /**
      * 优先级
@@ -80,12 +86,14 @@ public class ProjectTask implements Serializable {
     /**
      * 是否已完成
      */
-    private Boolean isFinished;
+    @TableField(value = "is_finished")
+    private Boolean finished;
 
     /**
      * 是否已删除
      */
-    private Boolean isDeleted;
+    @TableField(value = "is_deleted")
+    private Boolean deleted;
 
     /**
      * 任务创建时间
