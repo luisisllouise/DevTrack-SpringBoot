@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-public class VerificationCodeGenerator {
+public class VCodeGenerator {
     private static final int DEFAULT_VERIFICATION_CODE_LENGTH = 6;
     /**
      * 验证码的默认有效时间，单位：分钟。
@@ -21,9 +21,9 @@ public class VerificationCodeGenerator {
     @Getter
     private final int validTime;
 
-    public VerificationCodeGenerator() { this(DEFAULT_VALID_TIME); }
+    public VCodeGenerator() { this(DEFAULT_VALID_TIME); }
 
-    public VerificationCodeGenerator(int validTime) {
+    public VCodeGenerator(int validTime) {
         Random random = new SecureRandom();
         this.startTime = LocalDateTime.now();
         StringBuilder stringBuilder = new StringBuilder();

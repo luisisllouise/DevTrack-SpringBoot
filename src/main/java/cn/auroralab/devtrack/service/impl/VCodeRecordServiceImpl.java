@@ -1,13 +1,13 @@
 package cn.auroralab.devtrack.service.impl;
 
 import cn.auroralab.devtrack.entity.TaskTypeEnum;
-import cn.auroralab.devtrack.entity.VerificationCodeRecord;
+import cn.auroralab.devtrack.entity.VCodeRecord;
 import cn.auroralab.devtrack.environment.Environment;
-import cn.auroralab.devtrack.form.VerificationCodeForm;
-import cn.auroralab.devtrack.mapper.VerificationCodeRecordMapper;
-import cn.auroralab.devtrack.service.VerificationCodeRecordService;
+import cn.auroralab.devtrack.form.VCodeForm;
+import cn.auroralab.devtrack.mapper.VCodeRecordMapper;
+import cn.auroralab.devtrack.service.VCodeRecordService;
 import cn.auroralab.devtrack.util.UUIDGenerator;
-import cn.auroralab.devtrack.util.VerificationCodeGenerator;
+import cn.auroralab.devtrack.util.VCodeGenerator;
 import cn.auroralab.devtrack.vo.StatusCodeEnum;
 import cn.auroralab.devtrack.vo.VCodeResultVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,44 +26,44 @@ import java.time.LocalDateTime;
  * @since 2022-10-16
  */
 @Service
-public class VCodeRecordServiceImpl extends ServiceImpl<VerificationCodeRecordMapper, VerificationCodeRecord> implements VerificationCodeRecordService {
+public class VCodeRecordServiceImpl extends ServiceImpl<VCodeRecordMapper, VCodeRecord> implements VCodeRecordService {
     @Autowired
-    private VerificationCodeRecordMapper verificationCodeRecordMapper;
+    private VCodeRecordMapper vCodeRecordMapper;
 
-    public VCodeResultVO signUpVerificationCode(VerificationCodeForm form) {
-        VerificationCodeGenerator generator = new VerificationCodeGenerator();
+    public VCodeResultVO signUpVerificationCode(VCodeForm form) {
+        VCodeGenerator generator = new VCodeGenerator();
 
-        QueryWrapper<VerificationCodeRecord> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<VCodeRecord> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("task_type", TaskTypeEnum.SIGN_UP.code)
                 .eq("email", form.getEmail())
                 .ge("task_time", LocalDateTime.now().minusMinutes(generator.getValidTime()))
                 .orderByDesc("task_time")
                 .last("limit 1");
-        var oldRecord = verificationCodeRecordMapper.selectOne(queryWrapper);
+        var oldRecord = vCodeRecordMapper.selectOne(queryWrapper);
 
         if (oldRecord != null)
             return new VCodeResultVO(StatusCodeEnum.VCODE_RESEND, oldRecord);
 
-        VerificationCodeRecord vCodeRecord = new VerificationCodeRecord();
+        VCodeRecord vCodeRecord = new VCodeRecord();
 
         int createUUIDCount = 0;
         while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
             vCodeRecord.setUuid(UUIDGenerator.getUUID());
             createUUIDCount++;
             queryWrapper.eq("task_uuid", vCodeRecord.getUuid());
-            if (verificationCodeRecordMapper.selectOne(queryWrapper) == null)
+            if (vCodeRecordMapper.selectOne(queryWrapper) == null)
                 break;
             else if (createUUIDCount == Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID)
                 return new VCodeResultVO(StatusCodeEnum.UUID_CONFLICT);
         }
 
-        vCodeRecord.setTaskTime(generator.getStartTime());
-        vCodeRecord.setTaskType(form.getTaskType());
+        vCodeRecord.setTime(generator.getStartTime());
+        vCodeRecord.setType(form.getTaskType());
         vCodeRecord.setEmail(form.getEmail());
-        vCodeRecord.setVerificationCode(generator.getVerificationCode());
+        vCodeRecord.setVCode(generator.getVerificationCode());
         vCodeRecord.setValidTime(generator.getValidTime());
 
-        verificationCodeRecordMapper.insert(vCodeRecord);
+        vCodeRecordMapper.insert(vCodeRecord);
 
         return new VCodeResultVO(StatusCodeEnum.SUCCESS, vCodeRecord);
     }

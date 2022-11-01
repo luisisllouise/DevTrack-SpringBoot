@@ -30,10 +30,12 @@ public class ConvertTool {
 
     /**
      * 将二进制数组转换为十六进制字符串。
+     *
      * @param bytes 二进制数组。
      * @return 十六进制字符串。
      */
     public static String bytesToHexString(byte[] bytes) {
-        return new BigInteger(1, bytes).toString(16);
+        String str = new BigInteger(1, bytes).toString(16);
+        return "0".repeat(bytes.length * 2 - str.length()) + str;
     }
 }
