@@ -16,17 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/email-task")
+@RequestMapping("/email")
 public class EmailTaskController {
     @Autowired
     private EmailService emailService;
     @Autowired
     private VCodeRecordService vCodeRecordService;
-    @Autowired
-    private ResourceLoader resourceLoader;
 
-    @GetMapping("/send-verification-code")
-    public SendVCodeEmailResultVO sendVerificationCodeEmail(VCodeForm form) {
+    @GetMapping("/signUpVCode")
+    public SendVCodeEmailResultVO sendSignUpVCodeEmail(VCodeForm form) {
         VCodeResultVO vCodeResultVO = vCodeRecordService.signUpVerificationCode(form);
         if (vCodeResultVO.getStatusCode() != StatusCodeEnum.SUCCESS.code)
             return new SendVCodeEmailResultVO(StatusCodeEnum.parse(vCodeResultVO.getStatusCode()));

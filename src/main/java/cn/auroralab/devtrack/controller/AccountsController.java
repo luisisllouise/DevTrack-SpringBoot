@@ -25,10 +25,10 @@ public class AccountsController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/signup")
+    @GetMapping("/signUp")
     public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
 
-    @GetMapping("/login")
+    @GetMapping("/signIn")
     public SignInResultVO login(SignInForm signInForm) {
         SignInResultVO login_result = accountService.login(signInForm);
         return login_result;
