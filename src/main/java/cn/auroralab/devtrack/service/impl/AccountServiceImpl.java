@@ -17,14 +17,13 @@ import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.ResourceFileLoader;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.vo.*;
+import cn.auroralab.devtrack.vo.data.UserInformation;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -85,12 +84,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return new SignUpResultVO(StatusCodeEnum.SUCCESS);
     }
 
-    /**
-     * 用户登录，并对数据库中的last_login_time进行更新
-     *
-     * @param form
-     * @return
-     */
     public SignInResultVO login(SignInForm form) {
         //判断用户名
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
@@ -109,12 +102,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return new SignInResultVO(StatusCodeEnum.SUCCESS, new SignInResultData(account));
     }
 
-    /**
-     * 用户个人信息修改，验证码与密码均验证正确后则修改成功
-     *
-     * @param editProfileForm
-     * @return
-     */
     public EditProfileResultVO editProfile(EditProfileForm editProfileForm) {//Nickname，phone合法性在前端检查
         /*    密码校验     */
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
@@ -144,14 +131,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return new EditProfileResultVO(StatusCodeEnum.SUCCESS);
     }
 
-    /**
-     * 用户个人头像更改
-     *
-     * @param
-     * @return
-     * @author XiaoTong Wu
-     * @since 2022-11-01
-     */
     public AvatarResultVO updateAvatar(AvatarForm form) {
         String type = form.getFile().getOriginalFilename().substring(form.getFile().getOriginalFilename().lastIndexOf(".") + 1);
 
@@ -172,5 +151,16 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         //将头像更新至数据库
         return new AvatarResultVO(StatusCodeEnum.SUCCESS, type);
+    }
+
+    public UserInformationResultVO getUserInformation(String username) {
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        Account account = accountMapper.selectOne(queryWrapper);
+
+        if (account == null)
+            return new UserInformationResultVO(StatusCodeEnum.USER_NOT_EXISTS);
+
+        return new UserInformationResultVO(StatusCodeEnum.SUCCESS, new UserInformation(account));
     }
 }
