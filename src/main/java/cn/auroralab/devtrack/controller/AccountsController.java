@@ -34,4 +34,11 @@ public class AccountsController {
 
     @GetMapping("/updateAvatar")
     public AvatarResultVO updateAvatar(AvatarForm form) { return accountService.updateAvatar(form); }
+
+    @GetMapping("/getUserInformation")
+    public UserInformationResultVO getUserInformation(String username) {
+        if (username == null)
+            return new UserInformationResultVO(StatusCodeEnum.REQUIRED_PARAM_IS_NULL);
+        return accountService.getUserInformation(username);
+    }
 }

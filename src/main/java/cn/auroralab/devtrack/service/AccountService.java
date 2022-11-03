@@ -16,7 +16,20 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AccountService extends IService<Account> {
     SignUpResultVO signUp(SignUpForm form);
+
     SignInResultVO login(SignInForm signInForm);
+
     EditProfileResultVO editProfile(EditProfileForm editProfileForm);
+
     AvatarResultVO updateAvatar(AvatarForm form);
+
+    /**
+     * 获取用户信息。
+     *
+     * @param username 用户名。
+     * @return 包含状态码和用户信息的对象。
+     * @author Guanyu Hu
+     * @since 2022-11-03
+     */
+    UserInformationResultVO getUserInformation(String username);
 }

@@ -17,6 +17,7 @@ import cn.auroralab.devtrack.util.MD5Generator;
 import cn.auroralab.devtrack.util.ResourceFileLoader;
 import cn.auroralab.devtrack.util.UUIDGenerator;
 import cn.auroralab.devtrack.vo.*;
+import cn.auroralab.devtrack.vo.data.UserInformation;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,5 +173,16 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         //将头像更新至数据库
         return new AvatarResultVO(StatusCodeEnum.SUCCESS, type);
+    }
+
+    public UserInformationResultVO getUserInformation(String username) {
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        Account account = accountMapper.selectOne(queryWrapper);
+
+        if (account == null)
+            return new UserInformationResultVO(StatusCodeEnum.USER_NOT_EXISTS);
+
+        return new UserInformationResultVO(StatusCodeEnum.SUCCESS, new UserInformation(account));
     }
 }
