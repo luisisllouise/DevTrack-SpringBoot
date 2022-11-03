@@ -13,7 +13,7 @@ public class UserInformation {
     private final String nickname;
     private final String email;
     private final String phone;
-    private final LocalDateTime registrationTime;
+    private final LocalDateTime signUpTime;
     private final LocalDateTime lastSignInTime;
 
     public UserInformation(Account account) {
@@ -23,7 +23,7 @@ public class UserInformation {
         nickname = account.getNickname();
         email = account.getEmail();
         phone = account.getPhone();
-        registrationTime = account.getRegistrationTime();
+        signUpTime = account.getSignUpTime();
         lastSignInTime = account.getLastSignInTime();
     }
 }

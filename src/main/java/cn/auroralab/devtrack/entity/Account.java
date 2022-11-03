@@ -1,19 +1,13 @@
 package cn.auroralab.devtrack.entity;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.sql.Blob;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 
 /**
  * 用户账号信息
@@ -59,7 +53,7 @@ public class Account implements Serializable {
     /**
      * 注册时间
      */
-    private LocalDateTime registrationTime;
+    private LocalDateTime signUpTime;
     /**
      * 注销时间
      */
@@ -67,7 +61,6 @@ public class Account implements Serializable {
     /**
      * 上次登录时间
      */
-    @TableField(value = "last_login_time")
     private LocalDateTime lastSignInTime;
 
     public Account() { }
