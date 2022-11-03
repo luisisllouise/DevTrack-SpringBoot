@@ -1,14 +1,19 @@
 package cn.auroralab.devtrack.entity;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.sql.Blob;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 
 /**
  * 用户账号信息
@@ -38,7 +43,7 @@ public class Account implements Serializable {
     /**
      * 头像，使用二进制保存
      */
-    private Blob avatar;
+    private byte[] avatar;
     /**
      * 昵称
      */
@@ -62,9 +67,14 @@ public class Account implements Serializable {
     /**
      * 上次登录时间
      */
-    private LocalDateTime lastLoginTime;
+    @TableField(value = "last_login_time")
+    private LocalDateTime lastSignInTime;
 
     public Account() { }
 
-    public Account(LocalDateTime lastLoginTime) { this.lastLoginTime = lastLoginTime; }
+    public Account(LocalDateTime lastSignInTime) {
+        this.lastSignInTime = lastSignInTime;
+    }
+
+    public Account(byte[] avatar) { this.avatar = avatar; }
 }

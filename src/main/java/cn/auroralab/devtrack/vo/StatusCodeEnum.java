@@ -10,22 +10,27 @@ import java.util.Optional;
  * @since 2022-10-17
  */
 public enum StatusCodeEnum {
-    UNKNOWN_ERROR(0),           // 未知错误
-    SUCCESS(100),               // 成功
+    UNKNOWN_ERROR(0),                   // 未知错误
+    SUCCESS(100),                       // 成功
 
     // 用户业务
-    USER_EXISTS(201),           // 用户已存在
-    USER_NOT_EXISTS(202),       // 用户不存在
-    USER_PASSWORD_ERROR(203),   // 密码错误
+    USER_EXISTS(201),                   // 用户已存在
+    USER_NOT_EXISTS(202),               // 用户不存在
+    USER_PASSWORD_ERROR(203),           // 密码错误
+    USER_AVATAR_FILETYPE_ERROR(204),    // 文件类型错误
 
     //验证码业务
-    VCODE_ERROR(301),           // 验证码错误
-    VCODE_INVALID(302),         // 验证码失效（由于超时）
-    VCODE_NO_RECORD(303),       // 没有验证码记录（无效的验证码业务uuid）
-    VCODE_RESEND(304),          // 重新发送的验证码（验证码在有效期内将不会重新生成）
+    VCODE_ERROR(301),                   // 验证码错误
+    VCODE_INVALID(302),                 // 验证码失效（由于超时）
+    VCODE_NO_RECORD(303),               // 没有验证码记录（无效的验证码业务uuid）
+    VCODE_RESEND(304),                  // 重新发送的验证码（验证码在有效期内将不会重新生成）
+
+    // 请求业务
+    REQUIRED_PARAM_IS_NULL(801),        // 必填参数为null
 
     // 后台业务
-    UUID_CONFLICT(901),         // 生成uuid时发生碰撞
+    UUID_CONFLICT(901),                 // 生成uuid时发生碰撞
+
     ;
 
     public final int code;

@@ -1,13 +1,11 @@
 package cn.auroralab.devtrack.controller;
 
-import cn.auroralab.devtrack.entity.Account;
+import cn.auroralab.devtrack.form.AvatarForm;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
 import cn.auroralab.devtrack.service.AccountService;
-import cn.auroralab.devtrack.vo.EditProfileResultVO;
-import cn.auroralab.devtrack.vo.SignInResultVO;
-import cn.auroralab.devtrack.vo.SignUpResultVO;
+import cn.auroralab.devtrack.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,13 +27,18 @@ public class AccountsController {
     public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
 
     @GetMapping("/signIn")
-    public SignInResultVO login(SignInForm signInForm) {
-        SignInResultVO login_result = accountService.login(signInForm);
-        return login_result;
-    }
+    public SignInResultVO login(SignInForm signInForm) { return accountService.login(signInForm); }
 
     @GetMapping("/editprofile")
-    public EditProfileResultVO editprofile(EditProfileForm editProfileForm){
-        return accountService.editprofile(editProfileForm);
+    public EditProfileResultVO editProfile(EditProfileForm editProfileForm) { return accountService.editProfile(editProfileForm); }
+
+    @GetMapping("/updateAvatar")
+    public AvatarResultVO updateAvatar(AvatarForm form) { return accountService.updateAvatar(form); }
+
+    @GetMapping("/getUserInformation")
+    public UserInformationResultVO getUserInformation(String username) {
+        if (username == null)
+            return new UserInformationResultVO(StatusCodeEnum.REQUIRED_PARAM_IS_NULL);
+        return accountService.getUserInformation(username);
     }
 }
