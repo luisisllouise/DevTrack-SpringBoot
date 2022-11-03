@@ -1,12 +1,9 @@
 package cn.auroralab.devtrack.vo;
 
-import cn.auroralab.devtrack.entity.Account;
-import cn.auroralab.devtrack.form.result.SignInResultData;
-import lombok.Data;
+import cn.auroralab.devtrack.vo.data.UserInformation;
 
-@Data
-public class SignInResultVO extends ResultVO<SignInResultData> {
+public class SignInResultVO extends ResultVO<UserInformation> {
     public SignInResultVO(StatusCodeEnum statusCodeEnum) { super(statusCodeEnum); }
 
-    public SignInResultVO(StatusCodeEnum statusCodeEnum, SignInResultData signInResultData) { super(statusCodeEnum, signInResultData); }
+    public SignInResultVO(StatusCodeEnum statusCodeEnum, UserInformation signInResultData) { super(statusCodeEnum, signInResultData); }
 }

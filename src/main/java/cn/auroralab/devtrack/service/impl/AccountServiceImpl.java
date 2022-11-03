@@ -8,7 +8,6 @@ import cn.auroralab.devtrack.form.AvatarForm;
 import cn.auroralab.devtrack.form.EditProfileForm;
 import cn.auroralab.devtrack.form.SignInForm;
 import cn.auroralab.devtrack.form.SignUpForm;
-import cn.auroralab.devtrack.form.result.SignInResultData;
 import cn.auroralab.devtrack.mapper.AccountMapper;
 import cn.auroralab.devtrack.mapper.VCodeRecordMapper;
 import cn.auroralab.devtrack.service.AccountService;
@@ -60,7 +59,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         QueryWrapper<Account> accountQueryWrapper = new QueryWrapper<>();
         accountQueryWrapper.eq("username", form.getUsername());
-        if (accountMapper.selectOne(accountQueryWrapper) != null) return new SignUpResultVO(StatusCodeEnum.USER_EXISTS);
+        if (accountMapper.selectOne(accountQueryWrapper) != null)
+            return new SignUpResultVO(StatusCodeEnum.USER_EXISTS);
 
         int createUUIDCount = 0;
 
@@ -84,11 +84,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return new SignUpResultVO(StatusCodeEnum.SUCCESS);
     }
 
-    public SignInResultVO login(SignInForm form) {
+    public SignInResultVO signIn(SignInForm form) {
         //判断用户名
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", form.getUsername());
-        Account account = this.accountMapper.selectOne(queryWrapper);
+        Account account = accountMapper.selectOne(queryWrapper);
 
         if (account == null)
             return new SignInResultVO(StatusCodeEnum.USER_NOT_EXISTS);
@@ -99,35 +99,47 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         accountMapper.update(new Account(signInTime), queryWrapper);
         account.setLastSignInTime(signInTime);
 
-        return new SignInResultVO(StatusCodeEnum.SUCCESS, new SignInResultData(account));
+        return new SignInResultVO(StatusCodeEnum.SUCCESS, new UserInformation(account));
     }
 
-    public EditProfileResultVO editProfile(EditProfileForm editProfileForm) {//Nickname，phone合法性在前端检查
+    public EditProfileResultVO editProfile(EditProfileForm form) {
+        //nickname，phone合法性在前端检查
         /*    密码校验     */
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", editProfileForm.getUsername());//查询到信息数据
+        queryWrapper.eq("username", form.getUsername());                // 查询到信息数据
         Account account = this.accountMapper.selectOne(queryWrapper);
-        if (account == null) return new EditProfileResultVO(StatusCodeEnum.USER_NOT_EXISTS);
-        if (account.getPasswordDigest().equals(ConvertTool.bytesToHexString(MD5Generator.getMD5(editProfileForm.getOld_password()))))
-            return new EditProfileResultVO(StatusCodeEnum.USER_PASSWORD_ERROR);//密码验证错误
+
+        if (account == null)
+            return new EditProfileResultVO(StatusCodeEnum.USER_NOT_EXISTS);
+        if (account.getPasswordDigest().equals(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getOld_password()))))
+            return new EditProfileResultVO(StatusCodeEnum.USER_PASSWORD_ERROR); // 密码验证错误
+
         /*   验证码校验    */
-        QueryWrapper<VCodeRecord> verificationCodeRecordQueryWrapper = new QueryWrapper<>();
-        verificationCodeRecordQueryWrapper.eq("task_uuid", ConvertTool.hexStringToBytes(editProfileForm.getVerificationCodeRecordUUID()));
-        VCodeRecord vCodeRecord = vCodeRecordMapper.selectOne(verificationCodeRecordQueryWrapper);
-        if (vCodeRecord == null) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//获取验证码失败
-        boolean sameEmail = vCodeRecord.getEmail().equals(editProfileForm.getEmail());//判断邮箱
-        boolean sameVerificationCode = vCodeRecord.getVCode().equals(editProfileForm.getVerificationCode());//判断验证码
-        if (!sameEmail) return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);//验证码发送错误，发送至错误邮箱
-        if (!sameVerificationCode) return new EditProfileResultVO(StatusCodeEnum.VCODE_ERROR);//验证码错误
+        QueryWrapper<VCodeRecord> vCodeRecordQueryWrapper = new QueryWrapper<>();
+        vCodeRecordQueryWrapper.eq("task_uuid", ConvertTool.hexStringToBytes(form.getVerificationCodeRecordUUID()));
+        VCodeRecord vCodeRecord = vCodeRecordMapper.selectOne(vCodeRecordQueryWrapper);
+
+        if (vCodeRecord == null)
+            return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);                         // 获取验证码失败
+
+        boolean sameEmail = vCodeRecord.getEmail().equals(form.getEmail());                         // 判断邮箱
+        boolean sameVerificationCode = vCodeRecord.getVCode().equals(form.getVerificationCode());   // 判断验证码
+
+        if (!sameEmail)
+            return new EditProfileResultVO(StatusCodeEnum.VCODE_NO_RECORD);                         // 验证码发送错误，发送至错误邮箱
+        if (!sameVerificationCode)
+            return new EditProfileResultVO(StatusCodeEnum.VCODE_ERROR);                             // 验证码错误
         if (!vCodeRecord.isValid(LocalDateTime.now()))
-            return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);//验证码超时
+            return new EditProfileResultVO(StatusCodeEnum.VCODE_INVALID);                           // 验证码超时
+
         // 均成功
         Account target = new Account();
-        target.setNickname(editProfileForm.getNickname());
-        target.setEmail(editProfileForm.getEmail());
-        target.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(editProfileForm.getNew_password())));
-        target.setPhone(editProfileForm.getPhone());
+        target.setNickname(form.getNickname());
+        target.setEmail(form.getEmail());
+        target.setPasswordDigest(ConvertTool.bytesToHexString(MD5Generator.getMD5(form.getNew_password())));
+        target.setPhone(form.getPhone());
         accountMapper.update(target, queryWrapper);
+
         return new EditProfileResultVO(StatusCodeEnum.SUCCESS);
     }
 
@@ -149,6 +161,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         //将头像更新至数据库
         return new AvatarResultVO(StatusCodeEnum.SUCCESS, type);
     }

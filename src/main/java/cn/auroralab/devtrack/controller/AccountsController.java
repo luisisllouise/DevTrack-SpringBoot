@@ -27,7 +27,7 @@ public class AccountsController {
     public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
 
     @GetMapping("/signIn")
-    public SignInResultVO login(SignInForm signInForm) { return accountService.login(signInForm); }
+    public SignInResultVO signIn(SignInForm signInForm) { return accountService.signIn(signInForm); }
 
     @GetMapping("/editprofile")
     public EditProfileResultVO editProfile(EditProfileForm editProfileForm) { return accountService.editProfile(editProfileForm); }
