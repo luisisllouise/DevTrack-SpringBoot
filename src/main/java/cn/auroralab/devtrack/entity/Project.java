@@ -87,4 +87,14 @@ public class Project implements Serializable {
      * 项目删除时间
      */
     private LocalDateTime deleteTime;
+
+    public Project() {
+    }
+
+    public Project(String creator, String principal, String taskIdPrefix, boolean publicProject) {
+        this.creator = creator;
+        this.principal = principal;
+        this.taskIdPrefix = taskIdPrefix;
+        this.publicProject = publicProject;
+    }
 }
