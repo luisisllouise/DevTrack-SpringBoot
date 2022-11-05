@@ -23,22 +23,22 @@ public class AccountsController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/signup")
+    @GetMapping("/signUp")
     public SignUpResultVO signUp(SignUpForm form) { return accountService.signUp(form); }
 
-    @GetMapping("/login")
-    public SignInResultVO login(SignInForm signInForm) {
-        SignInResultVO login_result = accountService.login(signInForm);
-        return login_result;
-    }
+    @GetMapping("/signIn")
+    public SignInResultVO signIn(SignInForm signInForm) { return accountService.signIn(signInForm); }
 
     @GetMapping("/editprofile")
-    public EditProfileResultVO editProfile(EditProfileForm editProfileForm){
-        return accountService.editProfile(editProfileForm);
-    }
+    public EditProfileResultVO editProfile(EditProfileForm editProfileForm) { return accountService.editProfile(editProfileForm); }
 
-    @GetMapping("/avatar")
-    public AvatarResultVO avatar(AvatarForm form){
-        return accountService.avatar(form);
+    @GetMapping("/updateAvatar")
+    public AvatarResultVO updateAvatar(AvatarForm form) { return accountService.updateAvatar(form); }
+
+    @GetMapping("/getUserInformation")
+    public UserInformationResultVO getUserInformation(String username) {
+        if (username == null)
+            return new UserInformationResultVO(StatusCodeEnum.REQUIRED_PARAM_IS_NULL);
+        return accountService.getUserInformation(username);
     }
 }

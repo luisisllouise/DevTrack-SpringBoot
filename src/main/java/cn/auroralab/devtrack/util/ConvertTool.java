@@ -4,6 +4,9 @@ import java.math.BigInteger;
 
 /**
  * 转换工具类。用于转换进制字符串。
+ *
+ * @author Guanyu Hu
+ * @since 2022-10-16
  */
 public class ConvertTool {
     private static byte charToByte(char c) {
@@ -13,11 +16,14 @@ public class ConvertTool {
     /**
      * 将十六进制字符串转换为二进制数组，每一个元素代表0-0xff。
      *
-     * @param s 十六进制字符串。
+     * @param str 十六进制字符串。
      * @return 二进制数组。
+     * @author Guanyu Hu
+     * @since 2022-10-16
      */
-    public static byte[] hexStringToBytes(String s) {
-        if (s.length() % 2 != 0) s = '0' + s;
+    public static byte[] hexStringToBytes(String str) {
+        String s = str.length() % 2 == 0 ? str : '0' + str;
+
         int len = s.length() / 2;
         char[] chars = s.toLowerCase().toCharArray();
         byte[] bytes = new byte[len];
@@ -33,6 +39,8 @@ public class ConvertTool {
      *
      * @param bytes 二进制数组。
      * @return 十六进制字符串。
+     * @author Guanyu Hu
+     * @since 2022-10-16
      */
     public static String bytesToHexString(byte[] bytes) {
         String str = new BigInteger(1, bytes).toString(16);

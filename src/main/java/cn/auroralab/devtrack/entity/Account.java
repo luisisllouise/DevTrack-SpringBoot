@@ -1,7 +1,6 @@
 package cn.auroralab.devtrack.entity;
 
 import java.time.LocalDateTime;
-import java.sql.Blob;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -38,7 +37,7 @@ public class Account implements Serializable {
     /**
      * 头像，使用二进制保存
      */
-    private Blob avatar;
+    private byte[] avatar;
     /**
      * 昵称
      */
@@ -54,7 +53,7 @@ public class Account implements Serializable {
     /**
      * 注册时间
      */
-    private LocalDateTime registrationTime;
+    private LocalDateTime signUpTime;
     /**
      * 注销时间
      */
@@ -62,16 +61,13 @@ public class Account implements Serializable {
     /**
      * 上次登录时间
      */
-    private LocalDateTime lastLoginTime;
+    private LocalDateTime lastSignInTime;
 
-    public Account() {
+    public Account() { }
+
+    public Account(LocalDateTime lastSignInTime) {
+        this.lastSignInTime = lastSignInTime;
     }
 
-    public Account(LocalDateTime lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
-    }
-
-    public Account(Blob blob) {
-        this.avatar = blob;
-    }
+    public Account(byte[] avatar) { this.avatar = avatar; }
 }
