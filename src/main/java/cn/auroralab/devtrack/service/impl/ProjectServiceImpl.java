@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -33,6 +34,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public CreateProjectVO createProject(createProjectFrom Form){
         Project project=new Project(Form.getCreater_uuid(),Form.getPrincipal_uuid(),Form.getTaskIdPrefix(),Form.isPublicProject());
         QueryWrapper<Project> projectQueryWrapper=new QueryWrapper<>();
+        List<Project> list= projectMapper.selectList(projectQueryWrapper);
+        project.setId(String.valueOf(list.size()));
         int createUUIDCount = 0;
         while (createUUIDCount < Environment.MAX_COUNT_OF_TRY_TO_CREATE_UUID) {
             project.setUuid(UUIDGenerator.getUUID());

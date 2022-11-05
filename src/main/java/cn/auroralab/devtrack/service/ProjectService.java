@@ -12,5 +12,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-10-14
  */
 public interface ProjectService extends IService<Project> {
+    /**
+     * 创建项目
+     *
+     * @param form 项目创建表单
+     * @return 项目创建结果对象。
+     * @author Xiaotong Wu
+     * @since 2022-11-05
+     */
     CreateProjectVO createProject(createProjectFrom form);
 }
